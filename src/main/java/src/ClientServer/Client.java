@@ -82,7 +82,8 @@ public class Client
                 {
                     objectOutputStream.writeObject(command);
                     objectOutputStream.flush();
-                    return;
+                    System.out.println("Команда отправилась");
+                    break;
                 }
             }
         }catch (Exception e)

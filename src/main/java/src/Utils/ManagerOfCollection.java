@@ -18,7 +18,7 @@ public class ManagerOfCollection implements HeliosConnectable{
     public static void initDB() throws ClassNotFoundException, SQLException {
         Connection con = HeliosConnectable.createConToDB();
         Statement crt = con.createStatement();
-        crt.executeUpdate("create table spacemarine" +
+        crt.executeUpdate("create table if not exists spacemarine" +
                 "(id int, name text, x decimal, y decimal, " +
                 "creationDate TIMESTAMP WITH TIME ZONE, health decimal, " +
                 "astartesCategory text, weapon text, meleeWeapon text, " +
