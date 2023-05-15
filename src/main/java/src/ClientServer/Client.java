@@ -48,6 +48,7 @@ public class Client
                 }
                 if(getResponse(reader))
                 {
+                    System.out.println("You are accepted.");
                     sendingCommand(commandInvoker, objectOutputStream, scanner);
 
                     String getMsg = reader.readLine().replaceAll("@", "\n");
@@ -58,6 +59,7 @@ public class Client
                 else
                 {
                     System.out.println("You are not accepted.");
+                    firstTime = true;
                 }
 
             } catch (IOException e)

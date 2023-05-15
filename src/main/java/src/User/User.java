@@ -6,7 +6,7 @@ public class User implements Serializable
 {
     private String login;
     private String password;
-    boolean newable;
+    private boolean newable;
 
     User (String login, String password, boolean newable)
     {
