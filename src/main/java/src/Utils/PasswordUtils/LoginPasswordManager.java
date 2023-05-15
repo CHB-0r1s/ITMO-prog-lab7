@@ -17,7 +17,7 @@ public class LoginPasswordManager implements HeliosConnectable
     public static void initDB() throws ClassNotFoundException, SQLException {
         Connection con = HeliosConnectable.createConToDB();
         Statement crt = con.createStatement();
-        crt.executeUpdate("create table logpass" +
+        crt.executeUpdate("create table if not exists logpass" +
                 "(login text, password text)");
         con.close();
         LoginPasswordManager.dbIsInit = true;
@@ -25,7 +25,7 @@ public class LoginPasswordManager implements HeliosConnectable
 
     public static void insertUser(User user, Connection con) throws SQLException {
         PreparedStatement insSt = con.prepareStatement("insert into logpass " +
-                "(login text, password text) " +
+                "(login, password) " +
                 "values (?, ?)");
         insSt.setString(1, user.getLogin());
         insSt.setString(2, user.getPassword());
