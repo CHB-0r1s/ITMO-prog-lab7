@@ -15,8 +15,7 @@ import java.util.Scanner;
 
 public class Server
 {
-    public static void main(String[] args) throws IOException
-    {
+    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
         ManagerOfCollection.createMyCollection();
         LoginPasswordManager.fillMap();
         if (args[0].length() > 0) {

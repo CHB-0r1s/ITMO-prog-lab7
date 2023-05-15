@@ -8,22 +8,15 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import src.BaseObjects.*;
-import src.CredForPG;
 import javax.xml.stream.*;
 
-public class ManagerOfCollection {
+public class ManagerOfCollection implements HeliosConnectable{
     private static boolean dbIsInit = false;
     protected static boolean dbModeOn = true;
     private static TreeSet<SpaceMarine> myCollection;
     private static ZonedDateTime dateOfCreate;
-
-    public static Connection createConToDB() throws ClassNotFoundException, SQLException {
-        Class.forName("org.postgresql.Driver");
-        return DriverManager.getConnection("jdbc:postgresql://localhost:5432/studs",
-                CredForPG.getNameForPG(), CredForPG.getPswdForPG());
-    }
     public static void initDB() throws ClassNotFoundException, SQLException {
-        Connection con = createConToDB();
+        Connection con = HeliosConnectable.createConToDB();
         Statement crt = con.createStatement();
         crt.executeUpdate("create table spacemarine" +
                 "(id int, name text, x decimal, y decimal, " +
@@ -170,11 +163,11 @@ public class ManagerOfCollection {
 
     public static void  save() throws IOException, ClassNotFoundException, SQLException {
         if (ManagerOfCollection.dbModeOn) {
-            if (ManagerOfCollection.dbIsInit) {
+            if (!ManagerOfCollection.dbIsInit) {
                 initDB();
             }
             try {
-                Connection con = createConToDB();
+                Connection con = HeliosConnectable.createConToDB();
                 Statement delSt = con.createStatement();
                 delSt.executeUpdate("delete from spacemarine where id > 0");
                 for (SpaceMarine spaceMarine: ManagerOfCollection.getMyCollection()) {
@@ -286,7 +279,7 @@ public class ManagerOfCollection {
             if (maxLength < w.toString().length()) {
                 maxLength = w.toString().length();
                 maxMeleeWeapon = w;
-            };
+            }
         }
         MeleeWeapon finalMaxMeleeWeapon = maxMeleeWeapon;
         System.out.println(finalMaxMeleeWeapon);
@@ -350,7 +343,7 @@ public class ManagerOfCollection {
                             case 0 -> id = Long.parseLong(xmlr.getText());
                             case 1 -> name = xmlr.getText().replaceAll("&lt;", "<").
                                     replaceAll("&gt;", ">");
-                            case 2 -> x = (Float) Float.parseFloat(xmlr.getText());
+                            case 2 -> x = Float.parseFloat(xmlr.getText());
                             case 3 -> y = Double.parseDouble(xmlr.getText());
                             case 4 -> creationDate = ZonedDateTime.parse(xmlr.getText());
                             case 5 -> health = Float.parseFloat(xmlr.getText());

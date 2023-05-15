@@ -12,6 +12,7 @@ import java.io.ObjectOutputStream;
 import java.net.ConnectException;
 import java.net.Socket;
 import java.net.UnknownHostException;
+import java.sql.SQLException;
 import java.util.Scanner;
 
 public class Client
@@ -63,7 +64,7 @@ public class Client
             {
                 System.out.println("Something went wrong...");
                 System.exit(-1);
-            } catch (InterruptedException e)
+            } catch (InterruptedException | SQLException | ClassNotFoundException e)
             {
                 throw new RuntimeException(e);
             }
@@ -116,8 +117,7 @@ public class Client
 
 
 
-    private static User sendingUser(ObjectOutputStream objectOutputStream, Scanner scanner)
-    {
+    private static User sendingUser(ObjectOutputStream objectOutputStream, Scanner scanner) throws SQLException, ClassNotFoundException {
         User user;
         System.out.println("Do you want to log in or sign up?");
         while (true)
@@ -155,7 +155,6 @@ public class Client
 
     private static boolean getResponse(BufferedReader reader) throws IOException
     {
-        boolean response = Boolean.valueOf(reader.readLine());
-        return response;
+        return Boolean.parseBoolean(reader.readLine());
     }
 }
