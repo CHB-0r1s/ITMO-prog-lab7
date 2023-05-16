@@ -39,12 +39,12 @@ public class Main {
         // invokerHashMap.put("max_by_melee_weapon", new MaxByMeleeWeapon(commandReceiver));
         // invokerHashMap.put("print_unique_chapter", new PrintUniqueChapter(commandReceiver));
 
-        try(Scanner scanner = new Scanner(System.in)) {
-            while (scanner.hasNextLine()) {
-                commandInvoker.invoke(scanner.nextLine().trim().split("\s+"));
-            }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+//        try(Scanner scanner = new Scanner(System.in)) {
+//            while (scanner.hasNextLine()) {
+//                commandInvoker.invoke(scanner.nextLine().trim().split("\s+"));
+//            }
+//        } catch (Exception e) {
+//            throw new RuntimeException(e);
+//        }
     }
 }

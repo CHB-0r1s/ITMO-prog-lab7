@@ -1,18 +1,14 @@
 package src.Command;
 
-import src.BaseObjects.SpaceMarine;
 import src.Command.ConcreteCommands.*;
-import src.Utils.SpaceMarineCreator;
 
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
-import java.util.Scanner;
+
 
 
 public class Invoker implements Serializable
@@ -20,22 +16,6 @@ public class Invoker implements Serializable
     public HashMap<String, Command> invokerHashMap = new HashMap<String, Command>();
     public ArrayList<String> invokerListOfCommand = new ArrayList<>();
     private static ArrayList<String> fileNamesForNoRecursion = new ArrayList<>();
-
-    public void invoke(String[] command_name) throws IOException {
-        try {
-            if (command_name.length > 0) {
-                Command command = invokerHashMap.get(command_name[0]);
-                invokerListOfCommand.add(command_name[0]);
-                command.execute();
-            } else {
-                System.out.println("You have not entered a command.");
-            }
-        } catch (IllegalStateException | NullPointerException ex) {
-            System.out.println("There is no command " + command_name[0] + ". For reference, use – help");
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public Command invokeForClient(String[] command_name) throws IOException {
         fillHashMap();
