@@ -75,19 +75,17 @@ public class Client
 
     private static void sendingCommand(Invoker commandInvoker, ObjectOutputStream objectOutputStream, Scanner scanner)
     {
-        try{
+        try {
             while (scanner.hasNextLine()) {
                 Command command = commandInvoker.invokeForClient(scanner.nextLine().trim().split("\s+"));
                 if (command != null)
                 {
                     objectOutputStream.writeObject(command);
                     objectOutputStream.flush();
-                    System.out.println("Команда отправилась");
                     break;
                 }
             }
-        }catch (Exception e)
-        {
+        } catch (Exception e) {
             System.out.println(e.getMessage());
         }
     }

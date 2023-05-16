@@ -10,11 +10,10 @@ public class MyFloatReader {
         while (true) {
             try {
                 result = Float.parseFloat(scanner.nextLine().trim());
-                // TODO: поправить баг с двойным выводом при нулевом значении
                 switch (valueParam) {
                     case (">0"):
                         if (result <= 0) {
-                            System.out.println("Вы ввели не подходящее значение. " + "Оно должно быть " + valueParam + ". Попробуйте снова: ");
+                            System.out.println("You entered the wrong value. " + "It should be " + valueParam + ". Try again: ");
                             continue;
                         }
                         else {
@@ -22,7 +21,7 @@ public class MyFloatReader {
                         }
                     case ("<0"):
                         if (result >= 0) {
-                            System.out.println("Вы ввели не подходящее значение. " + "Оно должно быть " + valueParam + ". Попробуйте снова: ");
+                            System.out.println("You entered the wrong value. " + "It should be " + valueParam + ". Try again: ");
                             continue;
                         }
                         else {
@@ -30,15 +29,15 @@ public class MyFloatReader {
                         }
                     case (">=0"):
                         if (result < 0) {
-                            System.out.println("Вы ввели не подходящее значение. " + "Оно должно быть " + valueParam + ". Попробуйте снова: ");
+                            System.out.println("You entered the wrong value. " + "It should be " + valueParam + ". Try again: ");
                             continue;
                         }
                         else {
                             break;
                         }
                     case ("<=0"):
-                        if (result < 0) {
-                            System.out.println("Вы ввели не подходящее значение. " + "Оно должно быть " + valueParam + ". Попробуйте снова: ");
+                        if (result > 0) {
+                            System.out.println("You entered the wrong value. " + "It should be " + valueParam + ". Try again: ");
                             continue;
                         }
                         else {
@@ -47,7 +46,7 @@ public class MyFloatReader {
                 }
                 break;
             } catch (NumberFormatException ex) {
-                System.out.print("Вы должны ввести число (float), попробуйте снова: ");
+                System.out.print("You have to enter a number (float), try again:");
             }
         }
         return result;
@@ -62,7 +61,7 @@ public class MyFloatReader {
                 result = Long.parseLong(scanner.nextLine().trim());
                 break;
             } catch (NumberFormatException ex) {
-                System.out.print("You have to enter a number (long), try again: ");
+                System.out.print("You have to enter a number (float), try again: ");
             }
         }
         return result;

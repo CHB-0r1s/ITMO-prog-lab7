@@ -24,7 +24,6 @@ public class ExecuteScript extends Command {
         for (Command value : commands) {
             value.execute();
         }
-        System.out.println("23break");
     }
 
     @Override

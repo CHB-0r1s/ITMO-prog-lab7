@@ -13,9 +13,4 @@ public class UserCreator
         LoginPasswordManager.writeToDataBase(user);
         return user;
     }
-
-    public static void create(String login, String password)
-    {
-        //in another class, 'cause this class should be on client part??
-    }
 }

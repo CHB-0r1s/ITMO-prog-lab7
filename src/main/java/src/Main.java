@@ -13,9 +13,9 @@ public class Main {
     public static void main(String[] args) {
 
         ManagerOfCollection.createMyCollection();
-        if (args[0].length() > 0) {
-            ManagerOfCollection.fillFromXml(args[0]);
-        }
+//        if (args[0].length() > 0) {
+//            ManagerOfCollection.fillFromXml(args[0]);
+//        }
 
         Invoker commandInvoker = new Invoker();
         HashMap<String, Command> invokerHashMap = commandInvoker.invokerHashMap;
