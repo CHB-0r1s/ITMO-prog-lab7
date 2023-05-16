@@ -3,6 +3,7 @@ package src.Command.ConcreteCommands;
 import src.Command.Command;
 import src.Command.Receiver;
 import src.Command.ClientReceiver;
+import src.User.User;
 
 public class RemoveByID extends Command {
     private final Receiver commandReceiver;
@@ -14,9 +15,9 @@ public class RemoveByID extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(User user) {
 //        commandReceiver.remove_by_id(this.getLongFromClient());
-        commandReceiver.remove_by_id((Long) this.getExtraDataFromClient());
+        commandReceiver.remove_by_id((Long) this.getExtraDataFromClient(), user);
     }
 
     @Override

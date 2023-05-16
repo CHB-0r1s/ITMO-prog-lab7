@@ -4,6 +4,7 @@ import src.BaseObjects.SpaceMarine;
 import src.Command.Command;
 import src.Command.Receiver;
 import src.Command.ClientReceiver;
+import src.User.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -18,9 +19,9 @@ public class RemoveLower extends Command {
     }
 
     @Override
-    public void execute() throws IOException, SQLException, ClassNotFoundException {
+    public void execute(User user) throws IOException, SQLException, ClassNotFoundException {
 //        commandReceiver.remove_lower(this.getSpaceMarineFromClient());
-        commandReceiver.remove_lower((SpaceMarine) this.getExtraDataFromClient());
+        commandReceiver.remove_lower((SpaceMarine) this.getExtraDataFromClient(), user);
     }
 
     @Override

@@ -3,6 +3,7 @@ package src.Command.ConcreteCommands;
 import src.Command.Command;
 import src.Command.Receiver;
 import src.Command.ClientReceiver;
+import src.User.User;
 
 public class Help extends Command{
         private final Receiver commandReceiver;
@@ -14,7 +15,7 @@ public class Help extends Command{
     }
 
     @Override
-    public void execute() {
+    public void execute(User user) {
         commandReceiver.help();
     }
     @Override

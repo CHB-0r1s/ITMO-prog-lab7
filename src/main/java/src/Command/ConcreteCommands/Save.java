@@ -5,6 +5,7 @@ import src.Command.Receiver;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import src.User.User;
 
 public class Save extends Command {
     private final Receiver commandReceiver;
@@ -14,7 +15,7 @@ public class Save extends Command {
     }
 
     @Override
-    public void execute() throws IOException, SQLException, ClassNotFoundException {
+    public void execute(User user) throws IOException, SQLException, ClassNotFoundException {
         commandReceiver.save();
     }
 

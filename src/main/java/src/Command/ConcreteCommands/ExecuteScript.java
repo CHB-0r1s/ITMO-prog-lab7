@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import src.Command.ClientReceiver;
+import src.User.User;
+
 public class ExecuteScript extends Command {
     private final Receiver commandReceiver;
     private final ClientReceiver clientReceiver = null;
@@ -19,10 +21,10 @@ public class ExecuteScript extends Command {
     }
 
     @Override
-    public void execute() throws StackOverflowError, IOException, SQLException, ClassNotFoundException {
+    public void execute(User user) throws StackOverflowError, IOException, SQLException, ClassNotFoundException {
         ArrayList<Command> commands = (ArrayList<Command>) this.getExtraDataFromClient();
         for (Command value : commands) {
-            value.execute();
+            value.execute(user);
         }
     }
 

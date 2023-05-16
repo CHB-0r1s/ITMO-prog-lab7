@@ -4,6 +4,7 @@ import src.BaseObjects.SpaceMarine;
 import src.Command.Command;
 import src.Command.Receiver;
 import src.Command.ClientReceiver;
+import src.User.User;
 
 import java.util.ArrayList;
 
@@ -17,11 +18,11 @@ public class Update extends Command {
     }
 
     @Override
-    public void execute() {
+    public void execute(User user) {
 //        commandReceiver.update(this.getLongFromClient(), this.getSpaceMarineFromClient());
 //        commandReceiver.update();
         ArrayList<Object> buffer = (ArrayList<Object>) this.getExtraDataFromClient();
-        commandReceiver.update((Long) buffer.get(0), (SpaceMarine) buffer.get(1));
+        commandReceiver.update((Long) buffer.get(0), (SpaceMarine) buffer.get(1), user);
     }
 
     @Override
