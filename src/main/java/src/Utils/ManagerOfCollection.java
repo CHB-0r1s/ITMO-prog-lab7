@@ -8,11 +8,9 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 import src.BaseObjects.*;
-import javax.xml.stream.*;
 
 public class ManagerOfCollection implements HeliosConnectable{
     private static boolean dbIsInit = false;
-    protected static boolean dbModeOn = true;
     private static TreeSet<SpaceMarine> myCollection;
     private static ZonedDateTime dateOfCreate;
     public static void initDB() throws ClassNotFoundException, SQLException {
@@ -43,6 +41,26 @@ public class ManagerOfCollection implements HeliosConnectable{
         insSt.setString(10, spaceMarine.getChapter().getName());
         insSt.setString(11, spaceMarine.getChapter().getParentLegion());
         insSt.execute();
+    }
+
+    public static SpaceMarine rowToSpaceMarine(ResultSet spaceMarineRow) throws SQLException {
+        Long id = spaceMarineRow.getLong(1);
+        String name = spaceMarineRow.getString(2);
+        Float x = spaceMarineRow.getFloat(3);
+        double y = spaceMarineRow.getDouble(4);
+        ZonedDateTime creationDate = (ZonedDateTime) spaceMarineRow.getObject(5);
+        float health = spaceMarineRow.getFloat(6);
+        String category = spaceMarineRow.getString(7);
+        String weaponType = spaceMarineRow.getString(8);
+        String meleeWeapon = spaceMarineRow.getString(9);
+        String chapterName = spaceMarineRow.getString(10);
+        String chapterParentLegion = spaceMarineRow.getString(11);
+        return new SpaceMarine(id, name, new Coordinates(x, y), creationDate, health,
+                Enum.valueOf(AstartesCategory.class, category.toUpperCase(Locale.ROOT)),
+                Enum.valueOf(Weapon.class, weaponType.toUpperCase(Locale.ROOT)),
+                Enum.valueOf(MeleeWeapon.class, meleeWeapon.toUpperCase(Locale.ROOT)),
+                new Chapter(chapterName, chapterParentLegion));
+
     }
 
     public static void createMyCollection() {
@@ -162,98 +180,19 @@ public class ManagerOfCollection implements HeliosConnectable{
     }
 
     public static void  save() throws IOException, ClassNotFoundException, SQLException {
-        if (ManagerOfCollection.dbModeOn) {
-            if (!ManagerOfCollection.dbIsInit) {
-                initDB();
-            }
-            try {
-                Connection con = HeliosConnectable.createConToDB();
-                Statement delSt = con.createStatement();
-                delSt.executeUpdate("delete from spacemarine where id > 0");
-                for (SpaceMarine spaceMarine: ManagerOfCollection.getMyCollection()) {
-                    insertSpaceMarine(spaceMarine, con);
-                }
-                con.close();
-            } catch (ClassNotFoundException | SQLException e) {
-                throw new RuntimeException(e);
-            }
+        if (!ManagerOfCollection.dbIsInit) {
+            initDB();
         }
-        else {
-            try {
-            XMLOutputFactory output = XMLOutputFactory.newInstance();
-            XMLStreamWriter writer = output.createXMLStreamWriter(new BufferedOutputStream(new FileOutputStream("result.xml")));
-
-            writer.writeStartDocument("1.0");
-            writer.writeStartElement("MyCollection");
-            myCollection.forEach(spaceMarine -> {
-                try {
-                    writer.writeStartElement("SpaceMarine");
-
-                    writer.writeStartElement("id");
-                    writer.writeCharacters(Long.toString(spaceMarine.getId()));
-                    writer.writeEndElement();
-
-                    writer.writeStartElement("name");
-                    writer.writeCharacters(spaceMarine.getName().replaceAll("<", "&lt;").
-                            replaceAll(">", "&gt;"));
-                    writer.writeEndElement();
-
-                    writer.writeStartElement("coordinates");
-
-                    writer.writeStartElement("x");
-                    writer.writeCharacters(Float.toString(spaceMarine.getCoordinates().getX()));
-                    writer.writeEndElement();
-
-                    writer.writeStartElement("y");
-                    writer.writeCharacters(String.valueOf(spaceMarine.getCoordinates().getY()));
-                    writer.writeEndElement();
-
-                    writer.writeEndElement();
-
-                    writer.writeStartElement("creationDate");
-                    writer.writeCharacters(spaceMarine.getCreationDate().toString());
-                    writer.writeEndElement();
-
-                    writer.writeStartElement("health");
-                    writer.writeCharacters(String.valueOf(spaceMarine.getHealth()));
-                    writer.writeEndElement();
-
-                    writer.writeStartElement("category");
-                    writer.writeCharacters(spaceMarine.getCategory().toString());
-                    writer.writeEndElement();
-
-                    writer.writeStartElement("weaponType");
-                    writer.writeCharacters(spaceMarine.getWeaponType().toString());
-                    writer.writeEndElement();
-
-                    writer.writeStartElement("meleeWeapon");
-                    writer.writeCharacters(spaceMarine.getMeleeWeapon().toString());
-                    writer.writeEndElement();
-
-                    writer.writeStartElement("chapter");
-
-                    writer.writeStartElement("name");
-                    writer.writeCharacters(spaceMarine.getChapter().getName());
-                    writer.writeEndElement();
-
-                    writer.writeStartElement("parentLegion");
-                    writer.writeCharacters(spaceMarine.getChapter().getParentLegion());
-                    writer.writeEndElement();
-
-                    writer.writeEndElement();
-
-                    writer.writeEndElement();
-                } catch (XMLStreamException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            writer.writeEndElement();
-            writer.writeEndDocument();
-            writer.flush();
-        } catch (XMLStreamException | IOException ex) {
-            throw new RuntimeException(ex);
+        try {
+            Connection con = HeliosConnectable.createConToDB();
+            Statement delSt = con.createStatement();
+            delSt.executeUpdate("delete from spacemarine where id > 0");
+            for (SpaceMarine spaceMarine: ManagerOfCollection.getMyCollection()) {
+                insertSpaceMarine(spaceMarine, con);
             }
-
+            con.close();
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new RuntimeException(e);
         }
     }
 
@@ -315,72 +254,15 @@ public class ManagerOfCollection implements HeliosConnectable{
         }
     }
 
-    public static void fillFromXml(String path) {
-
-        try {
-            XMLInputFactory factory = XMLInputFactory.newInstance();
-            factory.setProperty("javax.xml.stream.isCoalescing", true);
-            XMLStreamReader xmlr = factory.createXMLStreamReader(path, new BufferedInputStream(new FileInputStream(path)));
-            int elemCounter = 0;
-            Long id = null;
-            String name = null;
-            Float x = null;
-            double y = 0;
-            float health = 0;
-            ZonedDateTime creationDate = null;
-            AstartesCategory category = null;
-            Weapon weaponType = null;
-            MeleeWeapon meleeWeapon = null;
-            String chapter_name = null;
-            String parentLegion = null;
-            while (xmlr.hasNext()) {
-                xmlr.next();
-
-
-                if (xmlr.hasText() && xmlr.getText().trim().length() > 0) {
-                    try {
-                    switch (elemCounter) {
-                            case 0 -> id = Long.parseLong(xmlr.getText());
-                            case 1 -> name = xmlr.getText().replaceAll("&lt;", "<").
-                                    replaceAll("&gt;", ">");
-                            case 2 -> x = Float.parseFloat(xmlr.getText());
-                            case 3 -> y = Double.parseDouble(xmlr.getText());
-                            case 4 -> creationDate = ZonedDateTime.parse(xmlr.getText());
-                            case 5 -> health = Float.parseFloat(xmlr.getText());
-                            case 6 -> category = AstartesCategory.valueOf(xmlr.getText());
-                            case 7 -> weaponType = Weapon.valueOf(xmlr.getText());
-                            case 8 -> meleeWeapon = MeleeWeapon.valueOf(xmlr.getText());
-                            case 9 -> chapter_name = xmlr.getText();
-                            case 10 -> parentLegion = xmlr.getText();
-                        }
-                    }
-                    catch (Exception exception) {
-                        //exception.printStackTrace();
-                        System.out.println("Invalid data in the specified file");
-                    }
-                    if (elemCounter == 10) {
-
-                        SpaceMarine spaceMarine = new SpaceMarine(id, name, new Coordinates(x, y),
-                                creationDate, health, category, weaponType, meleeWeapon,
-                                new Chapter(chapter_name, parentLegion));
-                        if (spaceMarine.validateID() &&
-                            spaceMarine.validateName() &&
-                            spaceMarine.validateCoordinates() &&
-                            spaceMarine.validateCreationDate() &&
-                            spaceMarine.validateHealth() &&
-                            spaceMarine.validateCategory() &&
-                            spaceMarine.validateMeleeWeapon()) {
-
-                            myCollection.add(spaceMarine);
-                        }
-                    }
-                    elemCounter = (elemCounter + 1) % 11;
-
-                }
-
-            }
-        } catch (FileNotFoundException | XMLStreamException ex) {
-            ex.printStackTrace();
+    public static void fillFromPostgres() throws SQLException, ClassNotFoundException {
+        if (!ManagerOfCollection.dbIsInit) {
+            initDB();
+        }
+        Connection con = HeliosConnectable.createConToDB();
+        Statement selSt = con.createStatement();
+        ResultSet spaceMarineRow = selSt.executeQuery("select * from spacemarine");
+        while (spaceMarineRow.next()) {
+            myCollection.add(rowToSpaceMarine(spaceMarineRow));
         }
     }
 }

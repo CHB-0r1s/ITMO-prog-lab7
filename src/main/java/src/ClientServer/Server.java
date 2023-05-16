@@ -15,12 +15,22 @@ import java.util.Scanner;
 
 public class Server
 {
+    private static boolean sendResponse(ObjectInputStream objectInputStream, BufferedWriter writer) throws IOException, ClassNotFoundException
+    {
+        User user = (User) objectInputStream.readObject();
+        boolean response = LoginPasswordManager.compareUser(user);
+
+        writer.write(String.valueOf(response));
+        writer.newLine();
+        writer.flush();
+        return response;
+    }
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
         ManagerOfCollection.createMyCollection();
+        ManagerOfCollection.fillFromPostgres();
+
         LoginPasswordManager.fillMap();
-        if (args[0].length() > 0) {
-            ManagerOfCollection.fillFromXml(args[0]);
-        }
+
         int port = MyPortReader.read("Write a port (in integer format, more than 1024):");
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
@@ -34,7 +44,6 @@ public class Server
         {
             selector.select();
             Socket clientSocket = serverSocket.accept();
-            System.out.println("Client accepted");
 
             File fileName = new File("outServer.txt");
 
@@ -66,7 +75,7 @@ public class Server
                     }
                 } catch (ClassNotFoundException e)
                 {
-                    System.out.println(e);
+                    System.out.println(e.getMessage());
                 } catch (IllegalStateException | NullPointerException | SQLException ex)
                 {
                     System.out.println("There is no command " + ". For reference, use – help");
@@ -77,16 +86,5 @@ public class Server
                 System.out.println("Client sent nothing and left.");
             }
         }
-    }
-
-    private static boolean sendResponse(ObjectInputStream objectInputStream, BufferedWriter writer) throws IOException, ClassNotFoundException
-    {
-        User user = (User) objectInputStream.readObject();
-        boolean response = LoginPasswordManager.compareUser(user);
-
-        writer.write(String.valueOf(response));
-        writer.newLine();
-        writer.flush();
-        return response;
     }
 }

@@ -1,10 +1,7 @@
 package src.Utils.PasswordUtils;
 
-import src.BaseObjects.SpaceMarine;
 import src.User.User;
-import src.User.UserCreator;
 import src.Utils.HeliosConnectable;
-import src.Utils.ManagerOfCollection;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -73,8 +70,6 @@ public class LoginPasswordManager implements HeliosConnectable
         catch (ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
-        //fill from db
-        //UserCreator.create(login, password);
     }
 
     public static void writeToDataBase(User user) throws SQLException, ClassNotFoundException {
