@@ -2,6 +2,8 @@ package src.Utils;
 
 import java.io.*;
 import java.sql.*;
+import java.time.Instant;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -49,7 +51,10 @@ public class ManagerOfCollection implements HeliosConnectable{
         String name = spaceMarineRow.getString(2);
         Float x = spaceMarineRow.getFloat(3);
         double y = spaceMarineRow.getDouble(4);
-        ZonedDateTime creationDate = (ZonedDateTime) spaceMarineRow.getObject(5);
+        Timestamp timestamp = (Timestamp) spaceMarineRow.getObject(5);
+        Instant instant = timestamp.toInstant();
+        ZoneId zoneId = ZoneId.systemDefault();
+        ZonedDateTime creationDate = ZonedDateTime.ofInstant(instant, zoneId);
         float health = spaceMarineRow.getFloat(6);
         String category = spaceMarineRow.getString(7);
         String weaponType = spaceMarineRow.getString(8);
