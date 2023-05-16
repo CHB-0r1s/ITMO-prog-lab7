@@ -2,14 +2,14 @@ package src.Command;
 
 import src.BaseObjects.*;
 
-import src.Command.ConcreteCommands.ExecuteScript;
+import src.User.User;
+import src.Utils.HeliosConnectable;
 import src.Utils.ManagerOfCollection;
-import src.Utils.SpaceMarineCreator;
 
 import java.io.*;
-import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.ArrayList;
+import java.util.Objects;
 import java.util.Scanner;
 
 
@@ -32,24 +32,28 @@ public class Receiver implements Serializable{
         ManagerOfCollection.show();
     }
 
-    public void add(SpaceMarine spaceMarineFromClient) throws IOException, SQLException, ClassNotFoundException {
-        Long id = ManagerOfCollection.maxID() + 1;
+    public void add(SpaceMarine spaceMarineFromClient, User user) throws IOException, SQLException, ClassNotFoundException {
+        spaceMarineFromClient.setCreatedBy(user.getLogin());
+        Connection con = HeliosConnectable.createConToDB();
+        ManagerOfCollection.insertSpaceMarine(spaceMarineFromClient, con);
+        Long id = ManagerOfCollection.getCurrentIdInPostgres();
+        System.out.println("An element with ID has been created: " + id);
         spaceMarineFromClient.setId(id);
-        System.out.println("An element with ID has been created: " + spaceMarineFromClient.getId());
         ManagerOfCollection.add(spaceMarineFromClient);
-        ManagerOfCollection.save();
-        try { Thread.sleep(100);}
-        catch (Exception e) {System.out.println("Передержка");}
-
     }
-
-    public void update(Long id, SpaceMarine spaceMarineFromClient) {
+    // TODO: перетянуть все юзер чеки в менеджер
+    public void update(Long id, SpaceMarine spaceMarineFromClient, User user) {
         try {
             long ID = id;
             if (ManagerOfCollection.elemExist(ID)) {
-                ManagerOfCollection.update(spaceMarineFromClient, ID);
-                ManagerOfCollection.save();
-                System.out.println("Update completed");
+                if (Objects.equals(ManagerOfCollection.getElemByID(id).getCreatedBy(), user.getLogin())) {
+                    ManagerOfCollection.update(spaceMarineFromClient, ID);
+                    ManagerOfCollection.save();
+                    System.out.println("Update completed");
+                }
+                else {
+                    System.out.println("You can not modify this object!!!");
+                }
             }
             else {System.out.println("The item with this ID is not in the collection.");}
         } catch (NumberFormatException e) {
@@ -59,20 +63,25 @@ public class Receiver implements Serializable{
         }
     }
 
-    public void remove_by_id(Long id) {
+    public void remove_by_id(Long id, User user) {
         try {
             long ID = id;
             if (ManagerOfCollection.elemExist(ID)) {
-                ManagerOfCollection.remove_by_id(ID);
-                System.out.println("Element with ID " + ID + " was deleted successfully");
+                if (Objects.equals(ManagerOfCollection.getElemByID(id).getCreatedBy(), user.getLogin())) {
+                    ManagerOfCollection.remove_by_id(ID);
+                    System.out.println("Element with ID " + ID + " was deleted successfully");
+                }
+                else {
+                    System.out.println("This user can not modify this object!!!");
+                }
             } else {System.out.println("There is no element with such ID in the collection");}
         } catch (NumberFormatException e) {
             System.out.println("The command is not executed. You have entered an incorrect argument.");
         }
     }
 
-    public void clear() throws IOException, SQLException, ClassNotFoundException {
-        ManagerOfCollection.clear();
+    public void clear(User user) throws IOException, SQLException, ClassNotFoundException {
+        ManagerOfCollection.clear(user);
         ManagerOfCollection.save();
     }
 
@@ -96,13 +105,13 @@ public class Receiver implements Serializable{
         System.exit(0);
     }
 
-    public void remove_greater(SpaceMarine spaceMarineFromClient) throws IOException, SQLException, ClassNotFoundException {
-        ManagerOfCollection.remove_greater(spaceMarineFromClient);
+    public void remove_greater(SpaceMarine spaceMarineFromClient, User user) throws IOException, SQLException, ClassNotFoundException {
+        ManagerOfCollection.remove_greater(spaceMarineFromClient, user);
         ManagerOfCollection.save();
     }
 
-    public void remove_lower(SpaceMarine spaceMarineFromClient) throws IOException, SQLException, ClassNotFoundException {
-        ManagerOfCollection.remove_lower(spaceMarineFromClient);
+    public void remove_lower(SpaceMarine spaceMarineFromClient, User user) throws IOException, SQLException, ClassNotFoundException {
+        ManagerOfCollection.remove_lower(spaceMarineFromClient, user);
         ManagerOfCollection.save();
     }
 
@@ -121,10 +130,10 @@ public class Receiver implements Serializable{
         }
     }
 
-    public void remove_all_by_health(Double health) throws IOException, SQLException, ClassNotFoundException {
+    public void remove_all_by_health(Double health, User user) throws IOException, SQLException, ClassNotFoundException {
         double HP = health;
 
-        ManagerOfCollection.remove_all_by_health(HP);
+        ManagerOfCollection.remove_all_by_health(HP, user);
         ManagerOfCollection.save();
     }
 

@@ -2,27 +2,24 @@ package src.BaseObjects;
 
 import java.io.Serializable;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Objects;
-import java.util.UUID;
 
 public class SpaceMarine implements Comparable<SpaceMarine>, Serializable
 {
-    private static long idHelp = 0;
-    public static ArrayList<Long> canceledValuesOfID = new ArrayList<>();
     private Long id;
     private String name;
     private Coordinates coordinates;
-    private ZonedDateTime creationDate;
+    private final ZonedDateTime creationDate;
     private float health;
     private AstartesCategory category;
     private Weapon weaponType;
     private MeleeWeapon meleeWeapon;
     private Chapter chapter;
+    private String createdBy;
 
-    public SpaceMarine(String name, Coordinates coordinates, float health, AstartesCategory category, Weapon weaponType, MeleeWeapon meleeWeapon, Chapter chapter) {
-        this.setID();
+    public SpaceMarine(String name, Coordinates coordinates,
+                       float health, AstartesCategory category,
+                       Weapon weaponType, MeleeWeapon meleeWeapon, Chapter chapter) {
         this.name = name;
         this.coordinates = coordinates;
         this.creationDate = ZonedDateTime.now();
@@ -33,8 +30,24 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable
         this.chapter = chapter;
     }
 
-    public SpaceMarine(Long id, String name, Coordinates coordinates, ZonedDateTime creationDate, float health, AstartesCategory category, Weapon weaponType, MeleeWeapon meleeWeapon, Chapter chapter) {
-        this.setID();
+    public SpaceMarine(Long id, String name, Coordinates coordinates,
+                       float health, AstartesCategory category,
+                       Weapon weaponType, MeleeWeapon meleeWeapon, Chapter chapter) {
+        this.id = id;
+        this.name = name;
+        this.coordinates = coordinates;
+        this.creationDate = ZonedDateTime.now();
+        this.health = health;
+        this.category = category;
+        this.weaponType = weaponType;
+        this.meleeWeapon = meleeWeapon;
+        this.chapter = chapter;
+    }
+
+    public SpaceMarine(Long id, String name, Coordinates coordinates,
+                       ZonedDateTime creationDate, float health, AstartesCategory category,
+                       Weapon weaponType, MeleeWeapon meleeWeapon, Chapter chapter, String createdBy) {
+        this.id = id;
         this.name = name;
         this.coordinates = coordinates;
         this.creationDate = creationDate;
@@ -43,21 +56,7 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable
         this.weaponType = weaponType;
         this.meleeWeapon = meleeWeapon;
         this.chapter = chapter;
-    }
-
-    private void setID()
-    {
-        this.idHelp++;
-        Collections.sort(canceledValuesOfID);
-        for(long canceledNumber:canceledValuesOfID)
-        {
-            if (idHelp == canceledNumber)
-            {
-                idHelp++;
-            }
-        }
-        this.id = idHelp;
-        canceledValuesOfID.add(id);
+        this.createdBy = createdBy;
     }
 
     public Long getId() {
@@ -86,10 +85,6 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable
 
     public java.time.ZonedDateTime getCreationDate() {
         return creationDate;
-    }
-
-    public void setCreationDate(java.time.ZonedDateTime creationDate) {
-        this.creationDate = creationDate;
     }
 
     public float getHealth() {
@@ -132,18 +127,12 @@ public class SpaceMarine implements Comparable<SpaceMarine>, Serializable
         this.chapter = chapter;
     }
 
+    public void setCreatedBy(String createdBy) {this.createdBy = createdBy;}
+
+    public String getCreatedBy() {return this.createdBy;}
+
     @Override
     public int compareTo(SpaceMarine o) {
-        /*if (this.health - o.health > 0) {
-            return 1;
-        }
-        else if (this.health - o.health < 0) {
-            return -1;
-        }
-        else {
-            return 0;
-        }*/
-        // Сравнение по id так как пока это единственная претензия на уникальность для TreeSet
         if (this.id - o.id > 0) {
             return 1;
         }

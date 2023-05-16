@@ -3,6 +3,7 @@ package src.Command.ConcreteCommands;
 import src.Command.Command;
 import src.Command.Receiver;
 import src.Command.ClientReceiver;
+import src.User.User;
 
 import java.io.IOException;
 import java.sql.SQLException;
@@ -17,8 +18,8 @@ public class Clear extends Command {
     }
 
     @Override
-    public void execute() throws IOException, SQLException, ClassNotFoundException {
-        commandReceiver.clear();
+    public void execute(User user) throws IOException, SQLException, ClassNotFoundException {
+        commandReceiver.clear(user);
     }
 
     @Override

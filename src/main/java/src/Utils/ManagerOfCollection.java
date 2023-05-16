@@ -5,9 +5,9 @@ import java.sql.*;
 import java.time.ZonedDateTime;
 import java.util.*;
 import java.util.concurrent.atomic.AtomicInteger;
-import java.util.concurrent.atomic.AtomicLong;
 
 import src.BaseObjects.*;
+import src.User.User;
 
 public class ManagerOfCollection implements HeliosConnectable{
     private static boolean dbIsInit = false;
@@ -17,29 +17,30 @@ public class ManagerOfCollection implements HeliosConnectable{
         Connection con = HeliosConnectable.createConToDB();
         Statement crt = con.createStatement();
         crt.executeUpdate("create table if not exists spacemarine" +
-                "(id int, name text, x decimal, y decimal, " +
+                "(id serial, name text, x decimal, y decimal, " +
                 "creationDate TIMESTAMP WITH TIME ZONE, health decimal, " +
                 "astartesCategory text, weapon text, meleeWeapon text, " +
-                "chapterName text, parentLegion text)");
+                "chapterName text, parentLegion text, createdBy text)");
         con.close();
         ManagerOfCollection.dbIsInit = true;
     }
 
     public static void insertSpaceMarine(SpaceMarine spaceMarine, Connection con) throws SQLException {
         PreparedStatement insSt = con.prepareStatement("insert into spacemarine " +
-                "(id, name, x, y, creationDate, health, astartesCategory, weapon, meleeWeapon, chapterName, parentLegion) " +
-                "values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
-        insSt.setLong(1, spaceMarine.getId());
-        insSt.setString(2, spaceMarine.getName());
-        insSt.setFloat(3, spaceMarine.getCoordinates().getX());
-        insSt.setDouble(4, spaceMarine.getCoordinates().getY());
-        insSt.setObject(5, Timestamp.from(spaceMarine.getCreationDate().toInstant()));
-        insSt.setFloat(6, spaceMarine.getHealth());
-        insSt.setString(7, spaceMarine.getCategory().toString());
-        insSt.setString(8, spaceMarine.getWeaponType().toString());
-        insSt.setString(9, spaceMarine.getMeleeWeapon().toString());
-        insSt.setString(10, spaceMarine.getChapter().getName());
-        insSt.setString(11, spaceMarine.getChapter().getParentLegion());
+                "(name, x, y, creationDate, health, astartesCategory, weapon," +
+                " meleeWeapon, chapterName, parentLegion, createdBy)" +
+                " values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+        insSt.setString(1, spaceMarine.getName());
+        insSt.setFloat(2, spaceMarine.getCoordinates().getX());
+        insSt.setDouble(3, spaceMarine.getCoordinates().getY());
+        insSt.setObject(4, Timestamp.from(spaceMarine.getCreationDate().toInstant()));
+        insSt.setFloat(5, spaceMarine.getHealth());
+        insSt.setString(6, spaceMarine.getCategory().toString());
+        insSt.setString(7, spaceMarine.getWeaponType().toString());
+        insSt.setString(8, spaceMarine.getMeleeWeapon().toString());
+        insSt.setString(9, spaceMarine.getChapter().getName());
+        insSt.setString(10, spaceMarine.getChapter().getParentLegion());
+        insSt.setString(11, spaceMarine.getCreatedBy());
         insSt.execute();
     }
 
@@ -55,11 +56,12 @@ public class ManagerOfCollection implements HeliosConnectable{
         String meleeWeapon = spaceMarineRow.getString(9);
         String chapterName = spaceMarineRow.getString(10);
         String chapterParentLegion = spaceMarineRow.getString(11);
+        String createdBy = spaceMarineRow.getString(12);
         return new SpaceMarine(id, name, new Coordinates(x, y), creationDate, health,
                 Enum.valueOf(AstartesCategory.class, category.toUpperCase(Locale.ROOT)),
                 Enum.valueOf(Weapon.class, weaponType.toUpperCase(Locale.ROOT)),
                 Enum.valueOf(MeleeWeapon.class, meleeWeapon.toUpperCase(Locale.ROOT)),
-                new Chapter(chapterName, chapterParentLegion));
+                new Chapter(chapterName, chapterParentLegion), createdBy);
 
     }
 
@@ -98,6 +100,7 @@ public class ManagerOfCollection implements HeliosConnectable{
             System.out.println("Object's weapon - " + spaceMarine.getWeaponType());
             System.out.println("Melee weapons of the object - " + spaceMarine.getMeleeWeapon());
             System.out.println("Location of the object - " + spaceMarine.getChapter().getName() + ":" + spaceMarine.getChapter().getParentLegion());
+            System.out.println("Creator of the object - " + spaceMarine.getCreatedBy());
             System.out.println("_________________________________________________________\n");
         }
     }
@@ -125,6 +128,16 @@ public class ManagerOfCollection implements HeliosConnectable{
         return false;
     }
 
+    public static SpaceMarine getElemByID(long ID) {
+        for (SpaceMarine spaceMarine: ManagerOfCollection.getMyCollection()) {
+            if (spaceMarine.getId() == ID) {
+                return spaceMarine;
+            }
+        }
+        System.out.println("Null will returned, elem with this id is not exists");
+        return null;
+    }
+
     public static void remove_by_id(long ID) {
         myCollection.forEach(
                 spaceMarine -> {
@@ -135,78 +148,81 @@ public class ManagerOfCollection implements HeliosConnectable{
         );
     }
 
-    public static void clear() {
+    public static void clear(User user) {
+        myCollection.forEach(
+                spaceMarine -> {
+                    if (Objects.equals(spaceMarine.getCreatedBy(), user.getLogin())) {
+                        myCollection.remove(spaceMarine);
+                    }
+                });
         myCollection.clear();
     }
 
-    public static Long maxID() {
-        AtomicLong x = new AtomicLong();
-        myCollection.forEach(
-                spaceMarine -> {
-                    if (spaceMarine.getId() > x.get()) {
-                        x.set(spaceMarine.getId());
-                    }
-                }
-        );
-        return x.longValue();
+    public static Long getCurrentIdInPostgres() throws SQLException, ClassNotFoundException {
+        Connection con = HeliosConnectable.createConToDB();
+        Statement selSt = con.createStatement();
+        ResultSet lastId = selSt.executeQuery("select last_value from spacemarine_id_seq");
+        lastId.next();
+        return lastId.getLong(1);
+
     }
 
-    public static void remove_greater(SpaceMarine spaceMarine) {
+    public static void remove_greater(SpaceMarine spaceMarine, User user) {
         AtomicInteger x = new AtomicInteger();
 
         myCollection.forEach(
                 spaceMarine1 -> {
-                    if (spaceMarine1.compareTo(spaceMarine) > 0) {
+                    if (spaceMarine1.compareTo(spaceMarine) > 0 &&
+                            Objects.equals(spaceMarine.getCreatedBy(), user.getLogin())) {
                         myCollection.remove(spaceMarine1);
                         x.getAndIncrement();
                     }
                 }
         );
-        System.out.println(x + "items found and removed.");
+        System.out.println(x + "items what you can modify found and removed.");
     }
 
-    public static void remove_lower(SpaceMarine spaceMarine) {
+    public static void remove_lower(SpaceMarine spaceMarine, User user) {
         AtomicInteger x = new AtomicInteger();
 
         myCollection.forEach(
                 spaceMarine1 -> {
-                    if (spaceMarine1.compareTo(spaceMarine) < 0) {
+                    if (spaceMarine1.compareTo(spaceMarine) < 0 &&
+                            Objects.equals(spaceMarine.getCreatedBy(), user.getLogin())) {
                         myCollection.remove(spaceMarine1);
                         x.getAndIncrement();
                     }
                 }
         );
-        System.out.println(x + "items found and removed.");
+        System.out.println(x + "items what you can modify found and removed.");
     }
 
-    public static void  save() throws IOException, ClassNotFoundException, SQLException {
+    public static void save() throws IOException, ClassNotFoundException, SQLException {
         if (!ManagerOfCollection.dbIsInit) {
             initDB();
         }
-        try {
-            Connection con = HeliosConnectable.createConToDB();
-            Statement delSt = con.createStatement();
-            delSt.executeUpdate("delete from spacemarine where id > 0");
-            for (SpaceMarine spaceMarine: ManagerOfCollection.getMyCollection()) {
-                insertSpaceMarine(spaceMarine, con);
-            }
-            con.close();
-        } catch (ClassNotFoundException | SQLException e) {
-            throw new RuntimeException(e);
+
+        Connection con = HeliosConnectable.createConToDB();
+        Statement delSt = con.createStatement();
+        delSt.executeUpdate("delete from spacemarine where id > 0");
+        for (SpaceMarine spaceMarine: ManagerOfCollection.getMyCollection()) {
+            insertSpaceMarine(spaceMarine, con);
         }
+        con.close();
     }
 
-    public static void remove_all_by_health(double HP) {
+    public static void remove_all_by_health(double HP, User user) {
         AtomicInteger x = new AtomicInteger();
         myCollection.forEach(
                 spaceMarine -> {
-                    if (spaceMarine.getHealth() == HP) {
+                    if (spaceMarine.getHealth() == HP &&
+                            Objects.equals(spaceMarine.getCreatedBy(), user.getLogin())) {
                         myCollection.remove(spaceMarine);
                         x.getAndIncrement();
                     }
                 }
         );
-        System.out.println(x + "elements found and removed.");
+        System.out.println(x + "items what you can modify found and removed.");
     }
 
     public static void max_by_melee_weapon() {

@@ -15,9 +15,8 @@ import java.util.Scanner;
 
 public class Server
 {
-    private static boolean sendResponse(ObjectInputStream objectInputStream, BufferedWriter writer) throws IOException, ClassNotFoundException
+    private static boolean sendResponse(User user, BufferedWriter writer) throws IOException, ClassNotFoundException
     {
-        User user = (User) objectInputStream.readObject();
         boolean response = LoginPasswordManager.compareUser(user);
 
         writer.write(String.valueOf(response));
@@ -59,11 +58,12 @@ public class Server
 
                 try
                 {
-                    boolean responseToClient = sendResponse(objectInputStream, writer);
+                    User user = (User) objectInputStream.readObject();
+                    boolean responseToClient = sendResponse(user, writer);
                     if(responseToClient)
                     {
                         Command command = (Command) objectInputStream.readObject();
-                        command.execute();
+                        command.execute(user);
                         System.out.println(command);
                         out.close();
                         while (scanner.hasNextLine())

@@ -1,12 +1,14 @@
 package src.Command;
 
+import src.User.User;
+
 import java.io.IOException;
 import java.io.Serializable;
 import java.sql.SQLException;
 
 public abstract class Command implements Serializable
 {
-    public abstract void execute() throws IOException, SQLException, ClassNotFoundException;
+    public abstract void execute(User user) throws IOException, SQLException, ClassNotFoundException;
     public abstract Command clientExecute();
     protected abstract void writeInfo();
     private Object extraDataFromClient;

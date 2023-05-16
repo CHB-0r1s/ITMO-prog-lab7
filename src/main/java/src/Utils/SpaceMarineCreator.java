@@ -6,15 +6,6 @@ import src.Utils.MyReaders.*;
 import java.util.ArrayList;
 
 public class SpaceMarineCreator {
-    static String name;
-    static Float x;
-    static double y;
-    static float health;
-    static AstartesCategory astartesCategory;
-    static Weapon weapon;
-    static MeleeWeapon meleeWeapon;
-    static String chapterName;
-    static String parentLegion;
     public static SpaceMarine createSpaceMarine() {
         String name = MyStringReader.read("Enter the name of the object ", false);
         Float x = MyFloatReader.read("Enter the x (float) coordinate ");
