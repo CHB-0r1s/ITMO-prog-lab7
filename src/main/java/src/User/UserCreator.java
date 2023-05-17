@@ -10,7 +10,6 @@ public class UserCreator
 {
     public static User createFromConsole(boolean newable) throws SQLException, ClassNotFoundException {
         User user = new User(MyLoginReader.read(), MyPasswordReader.read(), newable);
-        LoginPasswordManager.writeToDataBase(user);
         return user;
     }
 }

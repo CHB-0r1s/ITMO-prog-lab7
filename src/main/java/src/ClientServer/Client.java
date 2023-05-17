@@ -48,7 +48,6 @@ public class Client
                 }
                 if(getResponse(reader))
                 {
-                    System.out.println("You are accepted.");
                     sendingCommand(commandInvoker, objectOutputStream, scanner);
 
                     String getMsg = reader.readLine().replaceAll("@", "\n");

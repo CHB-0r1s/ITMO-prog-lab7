@@ -1,7 +1,10 @@
 package src.Utils.PasswordUtils;
 
+import src.BaseObjects.SpaceMarine;
 import src.User.User;
+import src.User.UserCreator;
 import src.Utils.HeliosConnectable;
+import src.Utils.ManagerOfCollection;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -32,6 +35,18 @@ public class LoginPasswordManager implements HeliosConnectable
     public static void setUser(String login, String password)
     {
         users.put(login, password);
+        User user = new User(login, password);
+
+        try
+        {
+            writeToDataBase(user);
+        } catch (SQLException e)
+        {
+            throw new RuntimeException(e);
+        } catch (ClassNotFoundException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     public static boolean compareUser(User user)
@@ -41,7 +56,7 @@ public class LoginPasswordManager implements HeliosConnectable
         {
             return true;
         }
-        if (user.getNewable())
+        if (user.getNewable() && !users.keySet().contains(user.getLogin()))
         {
             setUser(user.getLogin(), user.getPassword());
             return true;
@@ -63,7 +78,7 @@ public class LoginPasswordManager implements HeliosConnectable
             while (resultSet.next()) {
                 String login = resultSet.getString(1);
                 String password = resultSet.getString(2);
-                LoginPasswordManager.setUser(login, password);
+                users.put(login, password);
             }
             con.close();
         }

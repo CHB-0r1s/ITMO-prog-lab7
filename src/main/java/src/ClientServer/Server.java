@@ -12,6 +12,11 @@ import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.sql.SQLException;
 import java.util.Scanner;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ForkJoinPool;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantReadWriteLock;
 
 public class Server
 {
@@ -24,6 +29,16 @@ public class Server
         writer.flush();
         return response;
     }
+
+    private static final ForkJoinPool pool = new ForkJoinPool();
+    private static final int numberOfThreads = Runtime.getRuntime().availableProcessors();
+    private static final ExecutorService service = Executors.newFixedThreadPool(numberOfThreads/2);
+    private static Socket clientSocket = new Socket();
+    public static void setClientSocket(Socket socket)
+    {
+        clientSocket = socket;
+    }
+
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
         ManagerOfCollection.createMyCollection();
         ManagerOfCollection.fillFromPostgres();
@@ -42,13 +57,15 @@ public class Server
         while (true)
         {
             selector.select();
-            Socket clientSocket = serverSocket.accept();
+            //clientSocket = serverSocket.accept();
+            pool.submit(ServerFunc.reading(serverSocket));
 
             File fileName = new File("outServer.txt");
 
             try
             {
                 ObjectInputStream objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
+                //^EOFException
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 
                 PrintStream out = new PrintStream(new FileOutputStream(fileName));
@@ -85,6 +102,7 @@ public class Server
             {
                 System.out.println("Client sent nothing and left.");
             }
+            //pool.shutdown();
         }
     }
 }

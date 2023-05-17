@@ -8,11 +8,17 @@ public class User implements Serializable
     private String password;
     private boolean newable;
 
-    User (String login, String password, boolean newable)
+    public User (String login, String password, boolean newable)
     {
         this.login = login;
         this.password = password;
         this.newable = newable;
+    }
+
+    public User (String login, String password)
+    {
+        this.login = login;
+        this.password = password;
     }
 
     void setLogin(String login)
