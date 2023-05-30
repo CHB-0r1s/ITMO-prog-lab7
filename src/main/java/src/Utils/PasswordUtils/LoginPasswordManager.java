@@ -1,13 +1,18 @@
 package src.Utils.PasswordUtils;
 
 import src.BaseObjects.SpaceMarine;
+import src.CredForPG;
 import src.User.User;
 import src.User.UserCreator;
 import src.Utils.HeliosConnectable;
 import src.Utils.ManagerOfCollection;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.sql.*;
 import java.util.HashMap;
+import java.util.Scanner;
 
 public class LoginPasswordManager implements HeliosConnectable
 {
@@ -96,6 +101,39 @@ public class LoginPasswordManager implements HeliosConnectable
             insertUser(user, con);
         } catch (SQLException | ClassNotFoundException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public static void readFromFileForDB()
+    {
+        File fileConfig = new File("config.txt");
+        Scanner scanner = null;
+        try
+        {
+            scanner = new Scanner(fileConfig);
+        } catch (FileNotFoundException e)
+        {
+            System.out.println("No config file");
+        }
+        while (scanner.hasNext())
+        {
+            String line = scanner.nextLine();
+            if (line.contains("fnlp"))
+            {
+                File file = new File(line.replaceAll(".*: ", ""));
+                try
+                {
+                    Scanner scannerForLP = new Scanner(file);
+                    String pseudoLogPas = scannerForLP.nextLine();
+                    String [] logPas = pseudoLogPas.split(":");
+                    CredForPG.setLogin(logPas[3]);
+                    CredForPG.setPswd(logPas[4]);
+                }
+                catch (FileNotFoundException e)
+                {
+                    System.out.println("Cannot find file from config.");
+                }
+            }
         }
     }
 }

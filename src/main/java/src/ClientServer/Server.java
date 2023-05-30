@@ -1,6 +1,7 @@
 package src.ClientServer;
 import src.Command.Command;
-import src.Multithreading.*;
+import src.Multithreading.MyConsumer;
+import src.Multithreading.Producer;
 import src.User.User;
 import src.Utils.ManagerOfCollection;
 import src.Utils.PasswordUtils.LoginPasswordManager;
@@ -36,10 +37,10 @@ public class Server
         serverSocketChannel.configureBlocking(false);
         serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-//        MyConsumer consumer = new MyConsumer();
-//        int numberOfThreads = Runtime.getRuntime().availableProcessors();
-//        ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
-//        executorService.submit(consumer);
+        MyConsumer consumer = new MyConsumer();
+        int numberOfThreads = Runtime.getRuntime().availableProcessors();
+        ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
+        executorService.submit(consumer);
 
         while (true)
         {
@@ -51,19 +52,22 @@ public class Server
                 ObjectInputStream objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
                 BufferedWriter writer = new BufferedWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
 
+                ClientStreams clientStreams = new ClientStreams(objectInputStream, writer);
+
                 try
                 {
                     User user = (User) objectInputStream.readObject();
-                    boolean responseToClient = ServerFunc.sendResponseOfConnecting(user, writer);
+                    boolean responseToClient = ServerFunc.sendResponseOfConnecting(user, clientStreams.getBufferedWriter());
 
                     if(responseToClient)
                     {
-//                        ForkJoinPool pool = new ForkJoinPool();
-//                        pool.submit(new Producer(clientSocket));
+                        ForkJoinPool pool = new ForkJoinPool();
+                        //Producer producer = new Producer(clientSocket, user, clientStreams);
+                        pool.submit(new Producer(clientSocket, user, clientStreams));
 
-                        Command command = (Command) objectInputStream.readObject();
-                        String responseLine = ServerFunc.execution(command, user);
-                        ServerFunc.writing(responseLine, clientSocket);
+//                        Command command = (Command) objectInputStream.readObject();
+//                        String responseLine = ServerFunc.execution(command, user);
+//                        ServerFunc.writing(responseLine, clientSocket);
                     }
                 } catch (IllegalStateException | NullPointerException ex)
                 {
@@ -73,7 +77,6 @@ public class Server
                 {
                     throw new RuntimeException(e);
                 }
-                objectInputStream.close();
             }
             catch (SocketException e)
             {
