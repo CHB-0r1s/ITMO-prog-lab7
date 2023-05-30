@@ -1,17 +1,10 @@
 package src.ClientServer;
 
-import src.Command.Command;
 import src.Command.Invoker;
 import src.User.User;
-import src.User.UserCreator;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.ObjectOutputStream;
-import java.net.ConnectException;
+import java.io.*;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.sql.SQLException;
 import java.util.Scanner;
 
@@ -38,20 +31,21 @@ public class Client
 
                 if(firstTime)
                 {
-                    thisUser = sendingUser(objectOutputStream, scanner);
+                    thisUser = ClientFunc.readUser(scanner);
+                    ClientFunc.sendUser(objectOutputStream, thisUser);
                     firstTime = false;
                 }
                 else
                 {
                     thisUser.setNewable(false);
-                    sendingUser(objectOutputStream, thisUser);
+                    ClientFunc.sendUser(objectOutputStream, thisUser);
                 }
-                if(getResponse(reader))
+                if(ClientFunc.getResponseOfConnecting(reader))
                 {
-                    sendingCommand(commandInvoker, objectOutputStream, scanner);
+                    ClientFunc.sendCommand(commandInvoker, objectOutputStream, scanner);
 
-                    String getMsg = reader.readLine().replaceAll("@", "\n");
-                    System.out.println(getMsg);
+                    ClientFunc.readResponse(clientSocket);
+
                     clientSocket.close();
                     Thread.sleep(1000);
                 }
@@ -70,91 +64,5 @@ public class Client
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    private static void sendingCommand(Invoker commandInvoker, ObjectOutputStream objectOutputStream, Scanner scanner)
-    {
-        try {
-            while (scanner.hasNextLine()) {
-                Command command = commandInvoker.invokeForClient(scanner.nextLine().trim().split("\s+"));
-                if (command != null)
-                {
-                    objectOutputStream.writeObject(command);
-                    objectOutputStream.flush();
-                    break;
-                }
-            }
-        } catch (Exception e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
-    private static Socket getConnection(String host, int port) throws IOException
-    {
-        while (true)
-        {
-            try
-            {
-                return new Socket(host, port);
-            } catch (UnknownHostException | ConnectException e)
-            {
-                System.out.println("No connection.");
-            }
-        }
-    }
-
-    private static void sendingUser(ObjectOutputStream objectOutputStream, User user)
-    {
-        try
-        {
-            objectOutputStream.writeObject(user);
-            objectOutputStream.flush();
-        } catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-        }
-    }
-
-
-
-    private static User sendingUser(ObjectOutputStream objectOutputStream, Scanner scanner) throws SQLException, ClassNotFoundException {
-        User user;
-        System.out.println("Do you want to log in or sign up?");
-        while (true)
-        {
-            String logOrSign = scanner.nextLine();
-            if (logOrSign != null && (logOrSign.toLowerCase().contains("log") || logOrSign.toLowerCase().contains("sign")))
-            {
-                if (logOrSign.toLowerCase().contains("log"))
-                {
-                    user = UserCreator.createFromConsole(false);
-                    break;
-                }
-                if (logOrSign.toLowerCase().contains("sign"))
-                {
-                    user = UserCreator.createFromConsole(true);
-                    break;
-                }
-            }
-            else
-            {
-                System.out.println("Incorrect input. Try again.");
-            }
-        }
-        try
-        {
-            objectOutputStream.writeObject(user);
-            objectOutputStream.flush();
-            return user;
-        } catch (Exception e)
-        {
-            System.out.println(e.getMessage());
-            return null;
-        }
-    }
-
-    private static boolean getResponse(BufferedReader reader) throws IOException
-    {
-        return Boolean.parseBoolean(reader.readLine());
     }
 }
