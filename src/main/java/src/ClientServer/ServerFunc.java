@@ -12,7 +12,7 @@ import java.util.Scanner;
 
 public class ServerFunc
 {
-    protected static Runnable reading (ServerSocket serverSocket)
+    protected static Runnable reading_connecting (ServerSocket serverSocket)
     {
         return new Runnable()
         {

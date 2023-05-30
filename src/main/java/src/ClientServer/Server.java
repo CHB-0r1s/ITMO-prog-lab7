@@ -7,8 +7,6 @@ import src.Utils.PasswordUtils.LoginPasswordManager;
 
 import java.io.*;
 import java.net.*;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.sql.SQLException;
 import java.util.Scanner;
@@ -48,17 +46,12 @@ public class Server
         int port = MyPortReader.read("Write a port (in integer format, more than 1024):");
 
         ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-        ServerSocket serverSocket = serverSocketChannel.socket();
-        serverSocket.bind(new InetSocketAddress(port));
-        Selector selector = Selector.open();
-        serverSocketChannel.configureBlocking(false);
-        serverSocketChannel.register(selector, SelectionKey.OP_ACCEPT);
+        ServerSocket serverSocket = new ServerSocket(port);
 
         while (true)
         {
-            selector.select();
             //clientSocket = serverSocket.accept();
-            pool.submit(ServerFunc.reading(serverSocket));
+            pool.submit(ServerFunc.reading_connecting(serverSocket));
 
             File fileName = new File("outServer.txt");
 
