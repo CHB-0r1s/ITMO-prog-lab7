@@ -1,14 +1,24 @@
 package src;
 
 public class CredForPG {
-    protected static final String name = "s368764";
-    protected static final String pswd = "OeC9LaFi3hH1YevG";
+    protected static String login = "";
+    protected static String pswd = "";
 
     public static String getNameForPG() {
-        return name;
+        return login;
     }
 
     public static String getPswdForPG() {
         return pswd;
+    }
+
+    public static void setLogin(String login)
+    {
+        CredForPG.login = login;
+    }
+
+    public static void setPswd(String pswd)
+    {
+        CredForPG.pswd = pswd;
     }
 }

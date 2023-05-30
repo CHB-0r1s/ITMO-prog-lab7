@@ -1,0 +1,2 @@
+fnlp: .pgpass
+st: q15%CZ&Bon0szj

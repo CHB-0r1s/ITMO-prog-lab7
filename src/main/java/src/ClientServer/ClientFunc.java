@@ -2,7 +2,7 @@ package src.ClientServer;
 
 import src.Command.Command;
 import src.Command.Invoker;
-import src.Multithreading.*;
+import src.Multithreading.Response;
 import src.User.User;
 import src.User.UserCreator;
 

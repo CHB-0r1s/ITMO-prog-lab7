@@ -1,7 +1,7 @@
 package src.ClientServer;
 
 import src.Command.Command;
-import src.Multithreading.*;
+import src.Multithreading.Response;
 import src.User.User;
 import src.Utils.PasswordUtils.LoginPasswordManager;
 
@@ -27,7 +27,7 @@ public class ServerFunc
         return response;
     }
 
-    protected static String execution (Command command, User user) throws SQLException, IOException, ClassNotFoundException
+    public static String execution (Command command, User user)
     {
         try
         {
