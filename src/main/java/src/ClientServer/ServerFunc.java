@@ -8,6 +8,7 @@ import src.Utils.PasswordUtils.LoginPasswordManager;
 import java.io.*;
 import java.net.Socket;
 import java.sql.SQLException;
+import java.util.Set;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
@@ -31,15 +32,16 @@ public class ServerFunc
     {
         try
         {
-            lock.lock();
+            //lock.lock();
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            //Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
             PrintStream out = new PrintStream(outputStream);
-            String response = null;
             System.setOut(out);
+            //System.err.println("Выполняю " + user.getLogin() + " " + Thread.currentThread());
             command.execute(user);
             out.close();
-            response = outputStream.toString();
-            lock.unlock();
+            String response = outputStream.toString();
+            //lock.unlock();
             return response;
         } catch (IOException | SQLException | ClassNotFoundException e)
         {
