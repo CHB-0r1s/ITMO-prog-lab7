@@ -2,6 +2,7 @@ package src.ClientServer;
 import src.Command.Command;
 import src.Multithreading.MyConsumer;
 import src.Multithreading.Producer;
+import src.Multithreading.Queueueue;
 import src.User.User;
 import src.Utils.ManagerOfCollection;
 import src.Utils.PasswordUtils.LoginPasswordManager;
@@ -18,10 +19,6 @@ import java.util.concurrent.ForkJoinPool;
 
 public class Server
 {
-
-    private static final ForkJoinPool pool = new ForkJoinPool();
-    private static final int numberOfThreads = Runtime.getRuntime().availableProcessors();
-
     public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
         ManagerOfCollection.createMyCollection();
         ManagerOfCollection.fillFromPostgres();
@@ -40,12 +37,13 @@ public class Server
         MyConsumer consumer = new MyConsumer();
         int numberOfThreads = Runtime.getRuntime().availableProcessors();
         ExecutorService executorService = Executors.newFixedThreadPool(numberOfThreads);
-        executorService.submit(consumer);
 
         while (true)
         {
             selector.select();
             Socket clientSocket = serverSocket.accept();
+            executorService.submit(consumer);
+            System.err.println(Thread.currentThread());
 
             try
             {
@@ -61,7 +59,7 @@ public class Server
 
                     if(responseToClient)
                     {
-                        ForkJoinPool pool = new ForkJoinPool();
+                        ForkJoinPool pool = new ForkJoinPool(1);
                         //Producer producer = new Producer(clientSocket, user, clientStreams);
                         pool.submit(new Producer(clientSocket, user, clientStreams));
 

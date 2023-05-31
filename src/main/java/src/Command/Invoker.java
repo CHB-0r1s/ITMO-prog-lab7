@@ -16,9 +16,14 @@ public class Invoker implements Serializable
     public HashMap<String, Command> invokerHashMap = new HashMap<String, Command>();
     public ArrayList<String> invokerListOfCommand = new ArrayList<>();
     private static ArrayList<String> fileNamesForNoRecursion = new ArrayList<>();
+    private boolean checkForFirst = true;
 
     public Command invokeForClient(String[] command_name) throws IOException {
-        fillHashMap();
+        if (checkForFirst)
+        {
+            fillHashMap();
+            checkForFirst = false;
+        }
         if (command_name.length > 0 && invokerHashMap.get(command_name[0]) != null) {
             Command command = invokerHashMap.get(command_name[0]);
 
@@ -42,9 +47,7 @@ public class Invoker implements Serializable
 
             invokerListOfCommand.add(command_name[0]);
 
-            fillHashMap();
             return command.clientExecute();
-
         }
 
         else if (command_name.length == 0) {
