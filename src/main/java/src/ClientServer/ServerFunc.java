@@ -32,16 +32,12 @@ public class ServerFunc
     {
         try
         {
-            //lock.lock();
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
-            //Set<Thread> threadSet = Thread.getAllStackTraces().keySet();
             PrintStream out = new PrintStream(outputStream);
             System.setOut(out);
-            //System.err.println("Выполняю " + user.getLogin() + " " + Thread.currentThread());
             command.execute(user);
             out.close();
             String response = outputStream.toString();
-            //lock.unlock();
             return response;
         } catch (IOException | SQLException | ClassNotFoundException e)
         {
