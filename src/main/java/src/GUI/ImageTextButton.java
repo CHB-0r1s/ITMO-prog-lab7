@@ -9,12 +9,14 @@ public class ImageTextButton extends JButton
     private String buttonText;
 
     private Image backgroundPressedImage;
+    private Image backgroundDisabledImage;
 
-    public ImageTextButton(String buttonText, Image backgroundImage, Image backgroundPressedImage)
+    public ImageTextButton(String buttonText, Image backgroundImage, Image backgroundPressedImage, Image backgroundDisabledImage)
     {
         this.buttonText = buttonText;
         this.backgroundImage = backgroundImage;
         this.backgroundPressedImage = backgroundPressedImage;
+        this.backgroundDisabledImage = backgroundDisabledImage;
         setOpaque(false);
     }
 
@@ -22,25 +24,45 @@ public class ImageTextButton extends JButton
     protected void paintComponent(Graphics graphics)
     {
         super.paintComponent(graphics);
-        if (backgroundImage != null)
-        {
-            graphics.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
-        }
 
-        if (buttonText != null)
+        if(getModel().isEnabled())
         {
-            FontMetrics metrics = graphics.getFontMetrics(getFont());
-            int x = (getWidth() - metrics.stringWidth(buttonText)) / 2;
-            int y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
-            graphics.setColor(getForeground());
-            graphics.drawString(buttonText, x, y);
-        }
-
-        if (getModel().isPressed())
-        {
-            if (backgroundPressedImage != null)
+            if (backgroundImage != null)
             {
-                graphics.drawImage(backgroundPressedImage, 0, 0, getWidth(), getHeight(), this);
+                graphics.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
+            }
+
+            if (buttonText != null)
+            {
+                FontMetrics metrics = graphics.getFontMetrics(getFont());
+                int x = (getWidth() - metrics.stringWidth(buttonText)) / 2;
+                int y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
+                graphics.setColor(getForeground());
+                graphics.drawString(buttonText, x, y);
+            }
+
+            if (getModel().isPressed())
+            {
+                if (backgroundPressedImage != null)
+                {
+                    graphics.drawImage(backgroundPressedImage, 0, 0, getWidth(), getHeight(), this);
+                }
+
+                if (buttonText != null)
+                {
+                    FontMetrics metrics = graphics.getFontMetrics(getFont());
+                    int x = (getWidth() - metrics.stringWidth(buttonText)) / 2;
+                    int y = ((getHeight() - metrics.getHeight()) / 2) + metrics.getAscent();
+                    graphics.setColor(getForeground());
+                    graphics.drawString(buttonText, x, y);
+                }
+            }
+        }
+        else
+        {
+            if (backgroundDisabledImage != null)
+            {
+                graphics.drawImage(backgroundDisabledImage, 0, 0, getWidth(), getHeight(), this);
             }
 
             if (buttonText != null)

@@ -33,6 +33,7 @@ public class GUIConnectionToServer implements ActionListener
             try
             {
                 Socket clientSocket = new Socket(host, Integer.parseInt(port));
+                button.setEnabled(false);
             } catch (IOException ex)
             {
                 System.out.println("No connection.");
