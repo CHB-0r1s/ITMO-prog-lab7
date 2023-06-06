@@ -12,7 +12,7 @@ public class ClientGUI
 {
     private static JFrame mainFrame = new JFrame();
     private static Dimension mainSize = new Dimension();
-    private static User user = new User(null,null);
+    private static User user = null;
     private static Socket clientSocket = new Socket();
     private static ClientStreams clientStreams = new ClientStreams();
 
@@ -73,13 +73,13 @@ public class ClientGUI
                 Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
                 mainSize = size;
 
-                JFrame frame = new JFrame("GUI");
+                JFrame frame = new JFrame("GUI Launcher");
                 mainFrame = frame;
 
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setPreferredSize(size);
 
-                GUI_Operations.startWindow(frame, size);
+                GUI_LauncherOperations.startWindow(frame, size);
 
                 frame.pack();
                 frame.setVisible(true);

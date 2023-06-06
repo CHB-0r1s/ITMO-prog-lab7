@@ -35,6 +35,7 @@ public class ServerFunc
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PrintStream out = new PrintStream(outputStream);
             System.setOut(out);
+            System.err.println(command);
             command.execute(user);
             out.close();
             String response = outputStream.toString();

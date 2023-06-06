@@ -11,7 +11,7 @@ import java.net.Socket;
 public class GUI_ConnectionToServer implements ActionListener
 {
     private static JButton button = new JButton();
-    private static boolean connected = false;
+    static volatile boolean connected = false;
 
     public void setButton(JButton button)
     {
@@ -37,7 +37,7 @@ public class GUI_ConnectionToServer implements ActionListener
                 button.setEnabled(false);
                 ClientGUI.setClientSocket(clientSocket);
                 connected = true;
-                //here smt like signal -- check GUI_Operations!!
+                //here smt like signal -- check GUI_SendUser!!
             } catch (IOException ex)
             {
                 System.out.println("No connection.");
