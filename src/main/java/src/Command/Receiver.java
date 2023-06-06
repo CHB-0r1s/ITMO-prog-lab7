@@ -9,8 +9,7 @@ import src.Utils.ManagerOfCollection;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Receiver implements Serializable{
@@ -21,7 +20,16 @@ public class Receiver implements Serializable{
     }
 
     public void help() {
+        StringJoiner joiner = new StringJoiner("");
+        for (Map.Entry<String, Command> commandEntry: commandInvoker.invokerHashMap.entrySet()) {
+            joiner.add("<command><name>" + commandEntry.getKey() +
+                    "</name><description>" + commandEntry.getValue().writeInfo() +
+                    "</description></command>");
+        }
+        String stringOutput = joiner.toString();
         commandInvoker.invokerHashMap.forEach((name, command) -> command.writeInfo());
+        //System.out.println(stringOutput);
+        System.out.println("<?xml version=\"1.0\"?><commands>" + stringOutput + "</commands>");
     }
 
     public void info() {

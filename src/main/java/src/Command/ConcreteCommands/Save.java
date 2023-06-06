@@ -25,7 +25,7 @@ public class Save extends Command {
     }
 
     @Override
-    protected void writeInfo() {
-        System.out.println("The save command is to save the collection to a file.");
+    protected String writeInfo() {
+        return "The save command is to save the collection to a file.";
     }
 }

@@ -24,7 +24,7 @@ public class Info extends Command {
     public Command clientExecute() { return clientReceiver.info(); }
 
     @Override
-    protected void writeInfo() {
-        System.out.println("The info command displays information about the collection (type, initialization date, number of items, etc.)");
+    protected String writeInfo() {
+        return "The info command displays information about the collection (type, initialization date, number of items, etc.)";
     }
 }

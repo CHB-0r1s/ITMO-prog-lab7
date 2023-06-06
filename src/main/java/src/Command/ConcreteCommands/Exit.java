@@ -31,8 +31,8 @@ public class Exit extends Command{
     }
 
     @Override
-        protected void writeInfo() {
-            System.out.println("The exit command terminates the program without saving to a file");
+        protected String writeInfo() {
+            return "The exit command terminates the program without saving to a file";
         }
 
 

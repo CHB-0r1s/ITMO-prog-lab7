@@ -26,7 +26,7 @@ public class RemoveByID extends Command {
     }
 
     @Override
-    protected void writeInfo() {
-        System.out.println("The remove_by_id command. Syntax: remove_by_id id – remove an item from the collection by its id.");
+    protected String writeInfo() {
+        return "The remove_by_id command. Syntax: remove_by_id id – remove an item from the collection by its id.";
     }
 }

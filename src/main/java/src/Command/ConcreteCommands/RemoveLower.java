@@ -30,7 +30,7 @@ public class RemoveLower extends Command {
     }
 
     @Override
-    protected void writeInfo() {
-        System.out.println("The remove_lower command is to remove all items smaller than the specified one from the collection.");
+    protected String writeInfo() {
+        return "The remove_lower command is to remove all items smaller than the specified one from the collection.";
     }
 }

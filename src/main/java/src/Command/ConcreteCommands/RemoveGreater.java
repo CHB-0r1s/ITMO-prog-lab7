@@ -30,7 +30,7 @@ public class RemoveGreater extends Command {
     }
 
     @Override
-    protected void writeInfo() {
-        System.out.println("The remove_greater command is to remove all items from the collection that exceed the specified one.");
+    protected String writeInfo() {
+        return "The remove_greater command is to remove all items from the collection that exceed the specified one.";
     }
 }

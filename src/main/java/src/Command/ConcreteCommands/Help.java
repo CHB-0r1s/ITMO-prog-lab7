@@ -25,7 +25,7 @@ public class Help extends Command{
     }
 
     @Override
-    protected void writeInfo() {
-        System.out.println("The help command displays help for all available commands");
+    protected String writeInfo() {
+        return "The help command displays help for all available commands";
     }
 }
