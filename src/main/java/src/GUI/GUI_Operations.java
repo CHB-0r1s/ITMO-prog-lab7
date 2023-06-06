@@ -1,82 +1,124 @@
 package src.GUI;
 
+import src.ClientServer.ClientFunc;
+import src.User.User;
+import src.User.UserCreator;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import java.io.IOException;
 
 public class GUI_Operations
 {
-    public static void startWindow()
+    private static boolean isRegistered = false;
+    public static void startWindow(JFrame frame, Dimension size)
     {
-        try
+        if(!isRegistered)
         {
-            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-        } catch (UnsupportedLookAndFeelException e)
-        {
-            throw new RuntimeException(e);
-        } catch (ClassNotFoundException e)
-        {
-            throw new RuntimeException(e);
-        } catch (InstantiationException e)
-        {
-            throw new RuntimeException(e);
-        } catch (IllegalAccessException e)
-        {
-            throw new RuntimeException(e);
+            JLabel label = new JLabel();
+            label = GUI_Image.setBGImage(label, "pics\\start-bg.jpg", size);
+
+            GUI_ConnectionToServer guiConnectionToServer = new GUI_ConnectionToServer();
+            GUI_SendUser gui_sendUser = new GUI_SendUser();
+
+            Image buttonImg;
+            Image pressedButtonImg;
+            Image disabledButtonImg;
+            try
+            {
+                buttonImg = ImageIO.read(new File("pics\\button.png"));
+                pressedButtonImg = ImageIO.read(new File("pics\\pressed_button.png"));
+                disabledButtonImg = ImageIO.read(new File("pics\\disabled_button.png"));
+            } catch (IOException e)
+            {
+                throw new RuntimeException(e);
+            }
+            Image scaledButtonImage = buttonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
+            Image scaledPressedButtonImg = pressedButtonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
+            Image scaledDisabledButtonImg = disabledButtonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
+
+            JButton button = new ImageTextButton("Connect", scaledButtonImage, scaledPressedButtonImg, scaledDisabledButtonImg);
+
+            button.setBounds(size.width / 2 - size.width / 10, 2 * size.height / 3, size.width / 5, size.height / 10);
+            button.setFont(new Font("Times New Roman", Font.BOLD, 25));
+            button.setForeground(Color.lightGray);
+            button.setPressedIcon(new ImageIcon(scaledPressedButtonImg));
+
+            button.setHorizontalTextPosition(JButton.CENTER);
+            button.setVerticalTextPosition(JButton.BOTTOM);
+
+            guiConnectionToServer.setButton(button);
+            button.addActionListener(guiConnectionToServer);
+            button.addActionListener(gui_sendUser);
+
+
+            frame.getContentPane().add(button);
+            frame.getContentPane().add(label);
         }
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-
-        JFrame frame = new JFrame("GUI");
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setPreferredSize(screenSize);
-
-        JLabel label = new JLabel();
-        label = GUI_Image.setBGImage(label,"pics\\start-bg.jpg", screenSize);
-
-        GUIConnectionToServer guiConnectionToServer = new GUIConnectionToServer();
-
-        Image buttonImg;
-        Image pressedButtonImg;
-        Image disabledButtonImg;
-        try
+        else
         {
-            buttonImg = ImageIO.read(new File("pics\\button.png"));
-            pressedButtonImg = ImageIO.read(new File("pics\\pressed_button.png"));
-            disabledButtonImg = ImageIO.read(new File("pics\\disabled_button.png"));
-        } catch (IOException e)
-        {
-            throw new RuntimeException(e);
+            frame.removeAll();
         }
-        Image scaledButtonImage = buttonImg.getScaledInstance(screenSize.width/5, screenSize.height/10, Image.SCALE_REPLICATE);
-        Image scaledPressedButtonImg = pressedButtonImg.getScaledInstance(screenSize.width/5, screenSize.height/10, Image.SCALE_REPLICATE);
-        Image scaledDisabledButtonImg = disabledButtonImg.getScaledInstance(screenSize.width/5, screenSize.height/10, Image.SCALE_REPLICATE);
-
-        JButton button = new ImageTextButton("Connect", scaledButtonImage, scaledPressedButtonImg, scaledDisabledButtonImg);
-
-        button.setBounds(screenSize.width/2 - screenSize.width/10, 2*screenSize.height/3, screenSize.width/5, screenSize.height/10);
-        button.setFont(new Font("Times New Roman",Font.BOLD,25));
-        button.setForeground(Color.lightGray);
-        button.setOpaque(false);
-        button.setContentAreaFilled(false);
-        button.setBorderPainted(false);
-        button.setPressedIcon(new ImageIcon(scaledPressedButtonImg));
-
-        button.setHorizontalTextPosition(JButton.CENTER);
-        button.setVerticalTextPosition(JButton.BOTTOM);
-        button.setIconTextGap(10);
-
-        guiConnectionToServer.setButton(button);
-        button.addActionListener(guiConnectionToServer);
-
-
-        frame.getContentPane().add(button);
-        frame.getContentPane().add(label);
-
-        frame.pack();
-        frame.setVisible(true);
     }
 
-    //public static void
+    private static void clearFrame (JFrame frame)
+    {
+        frame.getContentPane().removeAll();
+    }
+
+    public static void registration()
+    {
+        UIManager.put("OptionPane.okButtonText", "log in");
+        UIManager.put("OptionPane.cancelButtonText", "sign up");
+        Integer isLogging = JOptionPane.showOptionDialog(ClientGUI.getMainFrame(),
+                "What to log in or sign up?", "Registration",
+                JOptionPane.OK_CANCEL_OPTION, JOptionPane.QUESTION_MESSAGE, null, null, null);
+
+        //"log" as "ok" is 0; "reg" as "cancel" is 2
+        boolean isNewableUser = false;
+        if(isLogging == 0)
+        {
+            isNewableUser = false;
+        } else if(isLogging == 4)
+        {
+            isNewableUser = true;
+        }
+        isLogging = null;
+
+        UIManager.put("OptionPane.okButtonText", "Ok");
+        UIManager.put("OptionPane.cancelButtonText", "Cancel");
+
+        String bufferLogin = JOptionPane.showInputDialog(ClientGUI.getMainFrame(),
+                "login:", isLogging);
+        String login = bufferLogin;
+        bufferLogin = null;
+        String pass = JOptionPane.showInputDialog(ClientGUI.getMainFrame(),
+                "password:", bufferLogin);
+        User user = new User(login, pass, isNewableUser);
+
+
+        ClientGUI.setUser(user);
+        ClientFunc.sendUser(ClientGUI.getClientStreams().getObjectOutputStream(), user);
+//        try
+//        {
+//            if(ClientFunc.getResponseOfConnecting(ClientGUI.getClientStreams().getBufferedReader()))
+            if (true)
+            {
+                System.out.println("Everything is ok!");
+            } else
+            {
+                System.out.println("Client did not accepted!");
+            }
+//        }
+//        catch (IOException e)
+//        {
+//            throw new RuntimeException(e);
+//        }
+    }
 }
