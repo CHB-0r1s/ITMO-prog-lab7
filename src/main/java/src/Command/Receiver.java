@@ -37,7 +37,9 @@ public class Receiver implements Serializable{
         Connection con = HeliosConnectable.createConToDB();
         ManagerOfCollection.insertSpaceMarine(spaceMarineFromClient, con);
         Long id = ManagerOfCollection.getCurrentIdInPostgres();
-        System.out.println("An element with ID has been created: " + id);
+        String stringOutput = "An element with ID has been created: " + id;
+        //System.out.println(stringOutput);
+        System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
         spaceMarineFromClient.setId(id);
         ManagerOfCollection.add(spaceMarineFromClient);
     }
@@ -49,15 +51,26 @@ public class Receiver implements Serializable{
                 if (Objects.equals(ManagerOfCollection.getElemByID(id).getCreatedBy(), user.getLogin())) {
                     ManagerOfCollection.update(spaceMarineFromClient, ID);
                     ManagerOfCollection.save();
-                    System.out.println("Update completed");
+
+                    String stringOutput = "Update completed";
+                    //System.out.println(stringOutput);
+                    System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
                 }
                 else {
-                    System.out.println("You can not modify this object!!!");
+                    String stringOutput = "You can not modify this object!!!";
+                    //System.out.println(stringOutput);
+                    System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
                 }
             }
-            else {System.out.println("The item with this ID is not in the collection.");}
+            else {
+                String stringOutput = "The item with this ID is not in the collection.";
+                //System.out.println(stringOutput);
+                System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
+            }
         } catch (NumberFormatException e) {
-            System.out.println("The command is not executed. You have entered an incorrect argument.");
+            String stringOutput = "The command is not executed. You have entered an incorrect argument.";
+            //System.out.println(stringOutput);
+            System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
         } catch (IOException | ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
@@ -69,40 +82,61 @@ public class Receiver implements Serializable{
             if (ManagerOfCollection.elemExist(ID)) {
                 if (Objects.equals(ManagerOfCollection.getElemByID(id).getCreatedBy(), user.getLogin())) {
                     ManagerOfCollection.remove_by_id(ID);
-                    System.out.println("Element with ID " + ID + " was deleted successfully");
+                    String stringOutput = "Element with ID " + ID + " was deleted successfully";
+                    //System.out.println(stringOutput);
+                    System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
+
                 }
                 else {
-                    System.out.println("This user can not modify this object!!!");
+                    String stringOutput = "This user can not modify this object!!!";
+                    //System.out.println(stringOutput);
+                    System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
                 }
-            } else {System.out.println("There is no element with such ID in the collection");}
+            } else {
+                String stringOutput = "There is no element with such ID in the collection";
+                //System.out.println(stringOutput);
+                System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
+            }
         } catch (NumberFormatException e) {
-            System.out.println("The command is not executed. You have entered an incorrect argument.");
+            String stringOutput = "The command is not executed. You have entered an incorrect argument.";
+            //System.out.println(stringOutput);
+            System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
         }
     }
 
     public void clear(User user) throws IOException, SQLException, ClassNotFoundException {
         ManagerOfCollection.clear(user);
+        String stringOutput = "All the items available to you have been removed";
+        //System.out.println(stringOutput);
+        System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
         ManagerOfCollection.save();
     }
 
     public void exit() throws IOException, SQLException, ClassNotFoundException {
-        System.out.println("Save you progress in collection? [yes/no]");
-
-        Scanner exitScanner = new Scanner(System.in);
-        while (true) {
-            if (exitScanner.hasNextLine()) {
-                String ans = exitScanner.nextLine();
-                if (ans.equals("yes")) {
-                    ManagerOfCollection.save();
-                    break;
-                } else if (ans.equals("no")) {
-                    break;
-                }
-                else {System.out.println("Invalid answer. [yes/no]");}
-            }
-        }
-        System.out.println("Program is ending, bye-bye!");
-        System.exit(0);
+//        String stringOutput = "Save you progress in collection? [yes/no]";
+//        //System.out.println(stringOutput);
+//        System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
+//
+//        Scanner exitScanner = new Scanner(System.in);
+//        while (true) {
+//            if (exitScanner.hasNextLine()) {
+//                String ans = exitScanner.nextLine();
+//                if (ans.equals("yes")) {
+//                    ManagerOfCollection.save();
+//                    break;
+//                } else if (ans.equals("no")) {
+//                    break;
+//                }
+//                else {
+//                    String stringOutput2 = "Invalid answer. [yes/no]";
+//                    //System.out.println(stringOutput);
+//                    System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput2 + "</otvet>");
+//                }
+//            }
+//        }
+//
+//        System.out.println("Program is ending, bye-bye!");
+//        System.exit(0);
     }
 
     public void remove_greater(SpaceMarine spaceMarineFromClient, User user) throws IOException, SQLException, ClassNotFoundException {

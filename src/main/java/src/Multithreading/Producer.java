@@ -22,7 +22,6 @@ public class Producer implements Runnable{
         while (true) {
             try {
                 MyObjectReader reader = new MyObjectReader();
-                boolean a = socket.isClosed();
                 reader.read(socket, user, clientStreams);
                 Queueueue.add(reader);
                 synchronized (Queueueue.queue) {

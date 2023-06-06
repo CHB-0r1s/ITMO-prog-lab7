@@ -57,15 +57,11 @@ public class Server
                     User user = (User) objectInputStream.readObject();
                     boolean responseToClient = ServerFunc.sendResponseOfConnecting(user, clientStreams.getBufferedWriter());
 
-                    if(responseToClient)
+                    if (responseToClient)
                     {
                         ForkJoinPool pool = new ForkJoinPool(1);
-                        //Producer producer = new Producer(clientSocket, user, clientStreams);
                         pool.submit(new Producer(clientSocket, user, clientStreams));
 
-//                        Command command = (Command) objectInputStream.readObject();
-//                        String responseLine = ServerFunc.execution(command, user);
-//                        ServerFunc.writing(responseLine, clientSocket);
                     }
                 } catch (IllegalStateException | NullPointerException ex)
                 {
