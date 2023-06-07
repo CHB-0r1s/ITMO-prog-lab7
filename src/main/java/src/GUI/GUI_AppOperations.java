@@ -62,7 +62,7 @@ public class GUI_AppOperations
                 bHelp.setFont(new Font("Times New Roman", Font.BOLD, 25));
                 bHelp.setForeground(Color.lightGray);
 
-                Help help = null;
+                Help help = new Help(bHelp);
 
                 bHelp.addActionListener(help);
                 frame.getContentPane().add(bHelp);
