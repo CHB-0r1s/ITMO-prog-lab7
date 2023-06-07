@@ -6,7 +6,7 @@ import java.util.concurrent.locks.ReentrantLock;
 
 public class LauncherButton extends ImageTextButton
 {
-    private static boolean firstTime = false;
+    private static boolean firstTime = true;
     private Image backgroundImage;
     private String buttonText;
 
@@ -25,11 +25,11 @@ public class LauncherButton extends ImageTextButton
         super.paintComponent(graphics);
 
         lock.lock();
-        if (ClientGUI.getUser() != null && firstTime == false)
+        if (ClientGUI.getUser() != null && firstTime)
         {
             setEnabled(false);
             GUI_AppOperations.App();
-            firstTime = true;
+            firstTime = false;
         }
         lock.lock();
 

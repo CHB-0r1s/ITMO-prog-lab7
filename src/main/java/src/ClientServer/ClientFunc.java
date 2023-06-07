@@ -74,7 +74,7 @@ public class ClientFunc
         return Boolean.parseBoolean(reader.readLine());
     }
 
-    protected static void readResponse(Socket clientSocket) throws IOException, ClassNotFoundException
+    public static void readResponse(Socket clientSocket) throws IOException, ClassNotFoundException
     {
         ObjectInputStream objectInputStream = new ObjectInputStream(clientSocket.getInputStream());
         Response response = (Response) objectInputStream.readObject();

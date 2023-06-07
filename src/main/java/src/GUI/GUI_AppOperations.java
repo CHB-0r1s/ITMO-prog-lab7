@@ -1,13 +1,13 @@
 package src.GUI;
 
 import src.ClientServer.ClientStreams;
-import src.GUI.CommandButtons.Help;
+import src.Command.ConcreteCommands.Help;
+import src.GUI.CommandButtons.CommandButtonListener;
 import src.User.User;
 
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.IOException;
 
@@ -62,7 +62,7 @@ public class GUI_AppOperations
                 bHelp.setFont(new Font("Times New Roman", Font.BOLD, 25));
                 bHelp.setForeground(Color.lightGray);
 
-                Help help = new Help(bHelp);
+                CommandButtonListener help = new CommandButtonListener(bHelp, new Help());
 
                 bHelp.addActionListener(help);
                 frame.getContentPane().add(bHelp);

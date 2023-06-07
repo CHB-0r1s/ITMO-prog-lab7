@@ -1,6 +1,9 @@
 package src.ClientServer;
 
+import src.Command.ClientReceiver;
 import src.Command.Command;
+import src.Command.Invoker;
+import src.Command.Receiver;
 import src.Multithreading.Response;
 import src.User.User;
 import src.Utils.PasswordUtils.LoginPasswordManager;
@@ -32,6 +35,11 @@ public class ServerFunc
     {
         try
         {
+            Invoker invoker = new Invoker();
+            invoker.fillHashMap();
+            Receiver receiver = new Receiver(invoker);
+            //ClientReceiver clientReceiver = new ClientReceiver(invoker);
+            command.setCommandReceiver(receiver);
             ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
             PrintStream out = new PrintStream(outputStream);
             System.setOut(out);

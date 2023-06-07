@@ -6,22 +6,26 @@ import src.Command.ClientReceiver;
 import src.User.User;
 
 public class Help extends Command{
-        private final Receiver commandReceiver;
-        private final ClientReceiver clientReceiver;
-
+//        private Receiver commandReceiver;
+//        private ClientReceiver clientReceiver;
+//
     public Help(Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;
         this.clientReceiver = clientReceiver;
     }
 
+    public Help()
+    {
+
+    }
+
     @Override
     public void execute(User user) {
-        commandReceiver.help(user);
+        super.commandReceiver.help(user);
     }
     @Override
     public Command clientExecute() {
-        return clientReceiver.help();
-
+        return super.clientReceiver.help();
     }
 
     @Override

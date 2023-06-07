@@ -14,7 +14,7 @@ import java.util.*;
 
 public class Receiver implements Serializable{
     public final Invoker commandInvoker;
-    public final File file = new File("C:\\Users\\Борис\\IdeaProjects\\lab7\\src\\main\\java\\src\\Command\\ConcreteCommands\\eng_lang.properties");
+    public final File file = new File("src\\main\\java\\src\\Command\\ConcreteCommands\\eng_lang.properties");
     public Properties properties = new Properties();
     public Receiver(Invoker commandInvoker) throws IOException {
         this.commandInvoker = commandInvoker;
