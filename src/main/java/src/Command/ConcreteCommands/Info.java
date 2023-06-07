@@ -25,6 +25,6 @@ public class Info extends Command {
 
     @Override
     protected String writeInfo() {
-        return "The info command displays information about the collection (type, initialization date, number of items, etc.)";
+        return "Command.Info.writeInfo";
     }
 }

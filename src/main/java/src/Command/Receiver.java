@@ -14,19 +14,22 @@ import java.util.*;
 
 public class Receiver implements Serializable{
     public final Invoker commandInvoker;
-    public final File file = new File("lab7\\src\\main\\java\\src\\Command\\ConcreteCommands\\eng_lang.properties");
+    public final File file = new File("C:\\Users\\Борис\\IdeaProjects\\lab7\\src\\main\\java\\src\\Command\\ConcreteCommands\\eng_lang.properties");
     public Properties properties = new Properties();
     public Receiver(Invoker commandInvoker) throws IOException {
         this.commandInvoker = commandInvoker;
         properties.load(new FileReader(file));
     }
 
-    public void help() {
+    public void help(User user) {
+        user.setLanguage("Eng");
+
         StringJoiner joiner = new StringJoiner("");
-        //properties.load(new FileReader(file));
+
         for (Map.Entry<String, Command> commandEntry: commandInvoker.invokerHashMap.entrySet()) {
+            String propKey = user.getLanguage() + "." + commandEntry.getValue().writeInfo();
             joiner.add("<command><name>" + commandEntry.getKey() +
-                    "</name><description>" + commandEntry.getValue().writeInfo() +
+                    "</name><description>" + properties.getProperty(propKey) +
                     "</description></command>");
         }
         String stringOutput = joiner.toString();
@@ -46,6 +49,7 @@ public class Receiver implements Serializable{
     }
     //xml
     public void add(User user, SpaceMarine spaceMarineFromClient) throws SQLException, ClassNotFoundException {
+        user.setLanguage("Eng");
         spaceMarineFromClient.setCreatedBy(user.getLogin());
         Connection con = HeliosConnectable.createConToDB();
         ManagerOfCollection.insertSpaceMarine(spaceMarineFromClient, con);

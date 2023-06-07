@@ -32,7 +32,7 @@ public class Exit extends Command{
 
     @Override
         protected String writeInfo() {
-            return "The exit command terminates the program without saving to a file";
+            return "Command.Exit.writeInfo";
         }
 
 

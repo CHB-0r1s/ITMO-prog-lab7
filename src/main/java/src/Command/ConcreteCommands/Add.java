@@ -31,6 +31,6 @@ public class Add extends Command {
 
     @Override
     protected String writeInfo() {
-        return "The add command adds a new item to the collection";
+        return "Command.Add.writeInfo";
     }
 }

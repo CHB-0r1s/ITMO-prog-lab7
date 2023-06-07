@@ -25,12 +25,12 @@ public class RemoveLower extends Command {
     }
 
     @Override
-    public Command clientExecute() {
+    public Command clientExecute() throws IOException {
         return clientReceiver.remove_lower();
     }
 
     @Override
     protected String writeInfo() {
-        return "The remove_lower command is to remove all items smaller than the specified one from the collection.";
+        return "Command.RemoveLower.writeInfo";
     }
 }

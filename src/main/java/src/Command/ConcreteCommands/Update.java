@@ -33,6 +33,6 @@ public class Update extends Command {
 
     @Override
     protected String writeInfo() {
-        return "The update command updates the value of the collection element whose id is equal to the specified one.";
+        return "Command.Update.writeInfo";
     }
 }

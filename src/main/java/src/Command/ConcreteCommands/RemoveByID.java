@@ -5,6 +5,8 @@ import src.Command.Receiver;
 import src.Command.ClientReceiver;
 import src.User.User;
 
+import java.io.IOException;
+
 public class RemoveByID extends Command {
     private final Receiver commandReceiver;
     private final ClientReceiver clientReceiver;
@@ -21,12 +23,12 @@ public class RemoveByID extends Command {
     }
 
     @Override
-    public Command clientExecute() {
+    public Command clientExecute() throws IOException {
         return clientReceiver.remove_by_id();
     }
 
     @Override
     protected String writeInfo() {
-        return "The remove_by_id command. Syntax: remove_by_id id – remove an item from the collection by its id.";
+        return "Command.RemoveByID.writeInfo";
     }
 }

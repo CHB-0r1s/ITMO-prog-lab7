@@ -26,6 +26,6 @@ public class PrintUniqueChapter extends Command{
 
     @Override
     protected String writeInfo() {
-        return "The print_unique_chapter command outputs the unique values of the chapter field of all items in the collection";
+        return "Command.PrintUniqueChapter.writeInfo";
     }
 }

@@ -25,12 +25,12 @@ public class RemoveGreater extends Command {
     }
 
     @Override
-    public Command clientExecute() {
+    public Command clientExecute() throws IOException {
         return clientReceiver.remove_greater();
     }
 
     @Override
     protected String writeInfo() {
-        return "The remove_greater command is to remove all items from the collection that exceed the specified one.";
+        return "Command.RemoveGreater.writeInfo";
     }
 }

@@ -29,7 +29,7 @@ public class ExecuteScript extends Command {
     }
 
     @Override
-    public Command clientExecute() {
+    public Command clientExecute() throws IOException {
 
         return clientReceiver.execute_script(getFileName());
     }
@@ -42,8 +42,7 @@ public class ExecuteScript extends Command {
 
     @Override
     protected String writeInfo() {
-        return "The execute_script command. Syntax: execute_script file_name – read and execute the script from the specified file. " +
-                "The script contains commands in the same form as they are entered by the user in interactive mode.";
+        return "Command.ExecuteScript.writeInfo";
     }
 
     public static String getPath() {

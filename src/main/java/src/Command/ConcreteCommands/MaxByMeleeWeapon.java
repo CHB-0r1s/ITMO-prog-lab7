@@ -25,7 +25,6 @@ public class MaxByMeleeWeapon extends Command{
 
     @Override
     protected String writeInfo() {
-        return "The max_by_melee_weapon command outputs any object from the collection, " +
-                "the value of the MeleeWeapon field of which is the maximum";
+        return "Command.MaxByMeleeWeapon.writeInfo";
     }
 }

@@ -26,6 +26,6 @@ public class Show extends Command {
 
     @Override
     protected String writeInfo() {
-        return "The show command outputs all the elements of the collection in a string representation";
+        return "Command.Show.writeInfo";
     }
 }

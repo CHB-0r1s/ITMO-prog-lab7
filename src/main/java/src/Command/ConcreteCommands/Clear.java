@@ -29,6 +29,6 @@ public class Clear extends Command {
 
     @Override
     protected String writeInfo() {
-        return "The clear command clears the collection.";
+        return "Command.Clear.writeInfo";
     }
 }

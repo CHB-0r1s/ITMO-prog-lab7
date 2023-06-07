@@ -16,7 +16,7 @@ public class Help extends Command{
 
     @Override
     public void execute(User user) {
-        commandReceiver.help();
+        commandReceiver.help(user);
     }
     @Override
     public Command clientExecute() {
@@ -26,6 +26,6 @@ public class Help extends Command{
 
     @Override
     protected String writeInfo() {
-        return "The help command displays help for all available commands";
+        return "Command.Help.writeInfo";
     }
 }

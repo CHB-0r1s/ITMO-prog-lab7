@@ -7,6 +7,7 @@ import src.Utils.MyReaders.MyDoubleReader;
 import src.Utils.SpaceMarineCreator;
 
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class SettingExtraDataFromClient
@@ -56,8 +57,7 @@ public class SettingExtraDataFromClient
         command.setExtraDataFromClient(spaceMarineFromClient);
     }
 
-    public static void setCommandsFromScript(String fileName, Command command) throws FileNotFoundException
-    {
+    public static void setCommandsFromScript(String fileName, Command command) throws IOException {
         Invoker invoker = new Invoker();
         ClientReceiver clientReceiver = new ClientReceiver(invoker);
         command.setExtraDataFromClient(clientReceiver.getCommandsFromScript(fileName));
