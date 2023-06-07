@@ -5,6 +5,7 @@ import java.awt.*;
 
 public class ImageTextButton extends JButton
 {
+
     private Image backgroundImage;
     private String buttonText;
 
@@ -19,7 +20,6 @@ public class ImageTextButton extends JButton
         this.backgroundDisabledImage = backgroundDisabledImage;
         setOpaque(false);
     }
-
     @Override
     protected void paintComponent(Graphics graphics)
     {

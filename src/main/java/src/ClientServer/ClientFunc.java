@@ -30,7 +30,7 @@ public class ClientFunc
         }
     }
 
-    protected static void sendUser(ObjectOutputStream objectOutputStream, User user)
+    public static void sendUser(ObjectOutputStream objectOutputStream, User user)
     {
         try
         {
@@ -69,7 +69,7 @@ public class ClientFunc
         return user;
     }
 
-    protected static boolean getResponseOfConnecting(BufferedReader reader) throws IOException
+    public static boolean getResponseOfConnecting(BufferedReader reader) throws IOException
     {
         return Boolean.parseBoolean(reader.readLine());
     }
