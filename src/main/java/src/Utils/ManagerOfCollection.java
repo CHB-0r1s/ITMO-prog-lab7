@@ -77,12 +77,13 @@ public class ManagerOfCollection implements HeliosConnectable{
         }
     }
 
-    public static void getInformationAbout() {
-        System.out.println("Information about the collection:");
-        System.out.println("Collection Type - " + myCollection.getClass().getName());
-        System.out.println("Date the collection was created - " + dateOfCreate);
-        System.out.println("Number of elements - " + myCollection.size());
-        System.out.println("_________________________________________________________\n");
+    public static String getInformationAbout() {
+        return  "Information about the collection: \n" +
+                "Collection Type - " + myCollection.getClass().getName() + "\n" +
+                "Date the collection was created - " + dateOfCreate + "\n" +
+                "Number of elements - " + myCollection.size() + "\n" +
+                "_________________________________________________________\n";
+
     }
 
     public static void add(SpaceMarine spaceMarine) {
@@ -95,6 +96,8 @@ public class ManagerOfCollection implements HeliosConnectable{
 
     public static void show() {
         for (SpaceMarine spaceMarine: myCollection) {
+            StringJoiner stringJoiner = new StringJoiner("");
+            
             System.out.println("Object ID - " + spaceMarine.getId());
             System.out.println("Object name - " + spaceMarine.getName());
             System.out.println("The X coordinate of the object - " + spaceMarine.getCoordinates().getX());

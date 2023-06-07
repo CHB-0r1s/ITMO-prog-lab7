@@ -30,7 +30,7 @@ public class Add extends Command {
     }
 
     @Override
-    protected void writeInfo() {
-        System.out.println("The add command adds a new item to the collection");
+    protected String writeInfo() {
+        return "The add command adds a new item to the collection";
     }
 }

@@ -25,7 +25,7 @@ public class Show extends Command {
     }
 
     @Override
-    protected void writeInfo() {
-        System.out.println("The show command outputs all the elements of the collection in a string representation");
+    protected String writeInfo() {
+        return "The show command outputs all the elements of the collection in a string representation";
     }
 }

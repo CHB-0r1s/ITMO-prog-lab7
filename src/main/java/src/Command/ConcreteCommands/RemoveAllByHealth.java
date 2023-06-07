@@ -30,8 +30,8 @@ public class RemoveAllByHealth extends Command {
 
     // TODO: readers wrapper-only
     @Override
-    protected void writeInfo() {
-        System.out.println("The remove_all_by_health command. Syntax: remove_all_by_health health – " +
-                "remove from the collection all elements whose value of the health field is equivalent to the specified one.");
+    protected String writeInfo() {
+        return "The remove_all_by_health command. Syntax: remove_all_by_health health – " +
+                "remove from the collection all elements whose value of the health field is equivalent to the specified one.";
     }
 }

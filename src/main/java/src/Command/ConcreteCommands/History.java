@@ -26,7 +26,7 @@ public class History extends Command{
     }
 
     @Override
-    protected void writeInfo() {
-        System.out.println("The history command outputs the last 11 commands.");
+    protected String writeInfo() {
+        return "The history command outputs the last 11 commands.";
     }
 }

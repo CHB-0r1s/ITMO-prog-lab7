@@ -28,7 +28,7 @@ public class Clear extends Command {
     }
 
     @Override
-    protected void writeInfo() {
-        System.out.println("The clear command clears the collection.");
+    protected String writeInfo() {
+        return "The clear command clears the collection.";
     }
 }

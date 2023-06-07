@@ -11,7 +11,7 @@ public abstract class Command implements Serializable
 {
     public abstract void execute(User user) throws IOException, SQLException, ClassNotFoundException;
     public abstract Command clientExecute();
-    protected abstract void writeInfo();
+    protected abstract String writeInfo();
     private Object extraDataFromClient;
 //    private float floatFromClient;
 //    private long longFromClient;

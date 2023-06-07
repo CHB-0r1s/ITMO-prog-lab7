@@ -9,8 +9,7 @@ import src.Utils.ManagerOfCollection;
 import java.io.*;
 import java.sql.Connection;
 import java.sql.SQLException;
-import java.util.Objects;
-import java.util.Scanner;
+import java.util.*;
 
 
 public class Receiver implements Serializable{
@@ -21,17 +20,29 @@ public class Receiver implements Serializable{
     }
 
     public void help() {
+        StringJoiner joiner = new StringJoiner("");
+        //properties.load(new FileReader(file));
+        for (Map.Entry<String, Command> commandEntry: commandInvoker.invokerHashMap.entrySet()) {
+            joiner.add("<command><name>" + commandEntry.getKey() +
+                    "</name><description>" + commandEntry.getValue().writeInfo() +
+                    "</description></command>");
+        }
+        String stringOutput = joiner.toString();
         commandInvoker.invokerHashMap.forEach((name, command) -> command.writeInfo());
+        //System.out.println(stringOutput);
+        System.out.println("<?xml version=\"1.0\"?><commands>" + stringOutput + "</commands>");
     }
 
+    //xml
     public void info() {
-        ManagerOfCollection.getInformationAbout();
+        String stringOutput = ManagerOfCollection.getInformationAbout();
+        System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
     }
 
     public void show() {
         ManagerOfCollection.show();
     }
-
+    //xml
     public void add(SpaceMarine spaceMarineFromClient, User user) throws IOException, SQLException, ClassNotFoundException {
         spaceMarineFromClient.setCreatedBy(user.getLogin());
         Connection con = HeliosConnectable.createConToDB();
@@ -44,6 +55,7 @@ public class Receiver implements Serializable{
         ManagerOfCollection.add(spaceMarineFromClient);
     }
     // TODO: перетянуть все юзер чеки в менеджер
+    //xml
     public void update(Long id, SpaceMarine spaceMarineFromClient, User user) {
         try {
             long ID = id;
@@ -76,6 +88,7 @@ public class Receiver implements Serializable{
         }
     }
 
+    //xml
     public void remove_by_id(Long id, User user) {
         try {
             long ID = id;
@@ -104,6 +117,7 @@ public class Receiver implements Serializable{
         }
     }
 
+    //xml
     public void clear(User user) throws IOException, SQLException, ClassNotFoundException {
         ManagerOfCollection.clear(user);
         String stringOutput = "All the items available to you have been removed";
@@ -112,6 +126,7 @@ public class Receiver implements Serializable{
         ManagerOfCollection.save();
     }
 
+    //xml
     public void exit() throws IOException, SQLException, ClassNotFoundException {
 //        String stringOutput = "Save you progress in collection? [yes/no]";
 //        //System.out.println(stringOutput);
@@ -153,6 +168,7 @@ public class Receiver implements Serializable{
         ManagerOfCollection.save();
     }
 
+    //slomano
     public void history() {
         if (commandInvoker.invokerListOfCommand.size() >= 11) {
             for (int i = commandInvoker.invokerListOfCommand.size() - 1; i > commandInvoker.invokerListOfCommand.size() - 11; i--) {

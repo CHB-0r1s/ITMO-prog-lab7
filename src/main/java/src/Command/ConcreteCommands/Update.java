@@ -31,7 +31,7 @@ public class Update extends Command {
     }
 
     @Override
-    protected void writeInfo() {
-        System.out.println("The update command updates the value of the collection element whose id is equal to the specified one.");
+    protected String writeInfo() {
+        return "The update command updates the value of the collection element whose id is equal to the specified one.";
     }
 }
