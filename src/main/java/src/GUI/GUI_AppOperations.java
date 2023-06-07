@@ -22,8 +22,8 @@ public class GUI_AppOperations
 
     public static void App()
     {
-        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
+//        javax.swing.SwingUtilities.invokeLater(new Runnable() {
+//            public void run() {
                 try
                 {
                     UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -68,7 +68,7 @@ public class GUI_AppOperations
                 frame.getContentPane().add(bHelp);
                 frame.pack();
                 frame.setVisible(true);
-            }
-        });
+//            }
+//        });
     }
 }

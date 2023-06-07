@@ -59,6 +59,7 @@ public class Server
 
                     if (responseToClient)
                     {
+                        System.err.println(user);
                         ForkJoinPool pool = new ForkJoinPool(1);
                         pool.submit(new Producer(clientSocket, user, clientStreams));
 

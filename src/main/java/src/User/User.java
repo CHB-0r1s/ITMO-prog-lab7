@@ -1,6 +1,9 @@
 package src.User;
 
+import src.Utils.Makers.MyHashMaker;
+
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
 
 public class User implements Serializable
 {
@@ -18,7 +21,13 @@ public class User implements Serializable
     public User (String login, String password)
     {
         this.login = login;
-        this.password = password;
+        try
+        {
+            this.password = MyHashMaker.makeIn224(password);
+        } catch (NoSuchAlgorithmException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 
     void setLogin(String login)

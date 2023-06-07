@@ -48,8 +48,9 @@ public class GUI_LauncherOperations
         button.setVerticalTextPosition(JButton.BOTTOM);
 
         guiConnectionToServer.setButton(button);
-        button.addActionListener(guiConnectionToServer);
+
         button.addActionListener(gui_sendUser);
+        button.addActionListener(guiConnectionToServer);
 
 
         frame.getContentPane().add(button);
@@ -89,13 +90,13 @@ public class GUI_LauncherOperations
         bufferLogin = null;
         String pass = JOptionPane.showInputDialog(ClientGUI.getMainFrame(),
                 "password:", bufferLogin);
-        User user = new User(login, pass, isNewableUser);
+        User user = new User(login, pass);
+        user.setNewable(isNewableUser);
 
         ClientFunc.sendUser(ClientGUI.getClientStreams().getObjectOutputStream(), user);
-//        try
-//        {
-//            if(ClientFunc.getResponseOfConnecting(ClientGUI.getClientStreams().getBufferedReader()))
-            if (true)
+        try
+        {
+            if(ClientFunc.getResponseOfConnecting(ClientGUI.getClientStreams().getBufferedReader()))
             {
                 System.out.println("Everything is ok!");
                 ClientGUI.setUser(user);
@@ -103,10 +104,10 @@ public class GUI_LauncherOperations
             {
                 System.out.println("Client did not accepted!");
             }
-//        }
-//        catch (IOException e)
-//        {
-//            throw new RuntimeException(e);
-//        }
+        }
+        catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
     }
 }

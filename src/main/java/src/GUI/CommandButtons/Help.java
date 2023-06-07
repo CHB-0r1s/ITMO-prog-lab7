@@ -1,7 +1,7 @@
 package src.GUI.CommandButtons;
 
 import src.ClientServer.ClientFunc;
-import src.Command.Command;
+import src.Command.*;
 import src.GUI.ClientGUI;
 import src.GUI.GUI_AppOperations;
 
@@ -15,7 +15,7 @@ public class Help implements ActionListener
     public void actionPerformed(ActionEvent e)
     {
         System.out.println("Im here");
-        Help command = null;
+        Command command = new src.Command.ConcreteCommands.Help(null, null);
         try
         {
             ClientGUI.getUser().setNewable(false);
