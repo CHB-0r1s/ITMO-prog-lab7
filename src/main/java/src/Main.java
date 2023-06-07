@@ -20,7 +20,7 @@ public class Main {
         Invoker commandInvoker = new Invoker();
         HashMap<String, Command> invokerHashMap = commandInvoker.invokerHashMap;
 
-        Receiver commandReceiver = new Receiver(commandInvoker);
+        //Receiver commandReceiver = new Receiver(commandInvoker);
 
         // invokerHashMap.put("help", new Help(commandReceiver));
         // invokerHashMap.put("info", new Info(commandReceiver));
