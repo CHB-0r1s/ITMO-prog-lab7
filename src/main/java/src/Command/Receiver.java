@@ -14,9 +14,11 @@ import java.util.*;
 
 public class Receiver implements Serializable{
     public final Invoker commandInvoker;
-
-    public Receiver(Invoker commandInvoker) {
+    public final File file = new File("lab7\\src\\main\\java\\src\\Command\\ConcreteCommands\\eng_lang.properties");
+    public Properties properties = new Properties();
+    public Receiver(Invoker commandInvoker) throws IOException {
         this.commandInvoker = commandInvoker;
+        properties.load(new FileReader(file));
     }
 
     public void help() {
@@ -43,14 +45,18 @@ public class Receiver implements Serializable{
         ManagerOfCollection.show();
     }
     //xml
-    public void add(SpaceMarine spaceMarineFromClient, User user) throws IOException, SQLException, ClassNotFoundException {
+    public void add(User user, SpaceMarine spaceMarineFromClient) throws SQLException, ClassNotFoundException {
         spaceMarineFromClient.setCreatedBy(user.getLogin());
         Connection con = HeliosConnectable.createConToDB();
         ManagerOfCollection.insertSpaceMarine(spaceMarineFromClient, con);
+
         Long id = ManagerOfCollection.getCurrentIdInPostgres();
-        String stringOutput = "An element with ID has been created: " + id;
+
+        String propKey = user.getLanguage() + ".Command.Add.execute";
+        String stringOutput = properties.getProperty(propKey) + " " + id;
         //System.out.println(stringOutput);
         System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
+
         spaceMarineFromClient.setId(id);
         ManagerOfCollection.add(spaceMarineFromClient);
     }

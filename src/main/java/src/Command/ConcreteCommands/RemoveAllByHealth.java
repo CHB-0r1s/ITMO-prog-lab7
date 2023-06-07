@@ -24,7 +24,7 @@ public class RemoveAllByHealth extends Command {
     }
 
     @Override
-    public Command clientExecute() {
+    public Command clientExecute() throws IOException {
         return clientReceiver.remove_all_by_health();
     }
 

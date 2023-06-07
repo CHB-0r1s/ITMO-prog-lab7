@@ -36,21 +36,21 @@ public class ClientReceiver implements Serializable {
     public Command print_unique_chapter() {
         return commandInvoker.invokerHashMap.get("print_unique_chapter");
     }
-    public Command add() {
+    public Command add() throws IOException {
         commandInvoker.fillHashMap();
         Command command = commandInvoker.invokerHashMap.get("add");
         SettingExtraDataFromClient.setSpaceMarineFromClient(command);
         return command;
     }
 
-    public Command update() {
+    public Command update() throws IOException {
         commandInvoker.fillHashMap();
         Command command = commandInvoker.invokerHashMap.get("update");
         SettingExtraDataFromClient.setLongAndSpaceMarine(command);
         return command;
     }
 
-    public Command remove_by_id() {
+    public Command remove_by_id() throws IOException {
         commandInvoker.fillHashMap();
         Command command = commandInvoker.invokerHashMap.get("remove_by_id");
         SettingExtraDataFromClient.setLongFromClient(command);
@@ -62,21 +62,21 @@ public class ClientReceiver implements Serializable {
 
     }
 
-    public Command remove_greater() {
+    public Command remove_greater() throws IOException {
         commandInvoker.fillHashMap();
         Command command = commandInvoker.invokerHashMap.get("remove_greater");
         SettingExtraDataFromClient.setSpaceMarineFromClient(command);
         return command;
     }
 
-    public Command remove_lower() {
+    public Command remove_lower() throws IOException {
         commandInvoker.fillHashMap();
         Command command = commandInvoker.invokerHashMap.get("remove_lower");
         SettingExtraDataFromClient.setSpaceMarineFromClient(command);
         return command;
     }
 
-    public Command execute_script(String path) {
+    public Command execute_script(String path) throws IOException {
         commandInvoker.fillHashMap();
         Command command = commandInvoker.invokerHashMap.get("execute_script");
         try {
@@ -90,7 +90,7 @@ public class ClientReceiver implements Serializable {
 
     private static ArrayList<String> fileNamesForNoRecursion = new ArrayList<>();
 
-    public ArrayList<Command> getCommandsFromScript (String fileName) throws FileNotFoundException
+    public ArrayList<Command> getCommandsFromScript (String fileName) throws IOException
     {
         fileNamesForNoRecursion.add(fileName);
         File file = new File(fileName);
@@ -222,7 +222,7 @@ public class ClientReceiver implements Serializable {
     }
 
 
-    public Command remove_all_by_health() {
+    public Command remove_all_by_health() throws IOException {
         commandInvoker.fillHashMap();
         Command command = commandInvoker.invokerHashMap.get("remove_all_by_health");
         SettingExtraDataFromClient.setDoubleFromClient(command);

@@ -21,11 +21,11 @@ public class Add extends Command {
     @Override
     public void execute(User user) throws IOException, SQLException, ClassNotFoundException {
 //        commandReceiver.add(this.getSpaceMarineFromClient());
-        commandReceiver.add((SpaceMarine) this.getExtraDataFromClient(), user);
+        commandReceiver.add(user, (SpaceMarine) this.getExtraDataFromClient());
     }
 
     @Override
-    public Command clientExecute() {
+    public Command clientExecute() throws IOException {
         return clientReceiver.add();
     }
 

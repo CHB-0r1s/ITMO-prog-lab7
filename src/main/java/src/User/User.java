@@ -9,6 +9,7 @@ public class User implements Serializable
 {
     private String login;
     private String password;
+    private String language;
     private boolean newable;
 
     public User (String login, String password, boolean newable)
@@ -58,5 +59,13 @@ public class User implements Serializable
     public boolean getNewable()
     {
         return newable;
+    }
+
+    public String getLanguage() {
+        return language;
+    }
+
+    public void setLanguage(String language) {
+        this.language = language;
     }
 }

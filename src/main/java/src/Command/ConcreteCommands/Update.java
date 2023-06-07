@@ -6,6 +6,7 @@ import src.Command.Receiver;
 import src.Command.ClientReceiver;
 import src.User.User;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 public class Update extends Command {
@@ -26,7 +27,7 @@ public class Update extends Command {
     }
 
     @Override
-    public Command clientExecute() {
+    public Command clientExecute() throws IOException {
         return clientReceiver.update();
     }
 

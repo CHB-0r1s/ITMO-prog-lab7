@@ -61,8 +61,7 @@ public class Invoker implements Serializable
     }
 
 
-    public void fillHashMap()
-    {
+    public void fillHashMap() throws IOException {
         Receiver commandReceiver = new Receiver(this);
         ClientReceiver clientReceiver = new ClientReceiver(this);
         invokerHashMap.put("help", new Help(commandReceiver, clientReceiver));
