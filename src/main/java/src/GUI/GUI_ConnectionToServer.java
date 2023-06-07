@@ -34,7 +34,7 @@ public class GUI_ConnectionToServer implements ActionListener
             try
             {
                 Socket clientSocket = new Socket(host, Integer.parseInt(port));
-                button.setEnabled(false);
+                //button.setEnabled(false);
                 ClientGUI.setClientSocket(clientSocket);
                 connected = true;
                 //here smt like signal -- check GUI_SendUser!!
