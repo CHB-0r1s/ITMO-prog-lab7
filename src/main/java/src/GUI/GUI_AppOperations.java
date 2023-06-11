@@ -3,6 +3,7 @@ package src.GUI;
 import src.ClientServer.ClientStreams;
 import src.Command.Command;
 import src.Command.ConcreteCommands.*;
+import src.GUI.CommandButtons.AddListener;
 import src.GUI.CommandButtons.CommandButtonListener;
 import src.User.User;
 
@@ -16,6 +17,11 @@ public class GUI_AppOperations
 {
     private static Dimension mainSize;
     private static JFrame mainFrame;
+
+    public static JFrame getMainFrame()
+    {
+        return mainFrame;
+    }
 
     private static User user = ClientGUI.getUser();
     private static ClientStreams clientStreams = ClientGUI.getClientStreams();
@@ -44,7 +50,11 @@ public class GUI_AppOperations
         container.setLayout(new FlowLayout(FlowLayout.CENTER));
 
         JButton bHelp = createCommandButton(new Help());
-        JButton bAdd = createCommandButton(new Add());
+
+        Add add = new Add();
+        JButton bAdd = createCommandButton(add);
+        AddListener addListener = new AddListener(add);
+        bAdd.addActionListener(addListener);
         JButton bExecuteScript = createCommandButton(new ExecuteScript());
         JButton bClear = createCommandButton(new Clear());
         JButton bInfo = createCommandButton(new Info());
