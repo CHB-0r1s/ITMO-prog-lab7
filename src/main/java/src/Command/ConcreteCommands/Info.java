@@ -6,9 +6,9 @@ import src.Command.ClientReceiver;
 import src.User.User;
 
 public class Info extends Command {
-    private final Receiver commandReceiver;
-    private final ClientReceiver clientReceiver;
 
+    public Info()
+    {}
     public Info(Receiver commandReceiver, ClientReceiver clientReceiver) {
 
         this.commandReceiver = commandReceiver;

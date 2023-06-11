@@ -1,7 +1,8 @@
 package src.GUI;
 
 import src.ClientServer.ClientStreams;
-import src.Command.ConcreteCommands.Help;
+import src.Command.Command;
+import src.Command.ConcreteCommands.*;
 import src.GUI.CommandButtons.CommandButtonListener;
 import src.User.User;
 
@@ -22,53 +23,88 @@ public class GUI_AppOperations
 
     public static void App()
     {
-//        javax.swing.SwingUtilities.invokeLater(new Runnable() {
-//            public void run() {
-                try
-                {
-                    UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
-                } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e)
-                {
-                    throw new RuntimeException(e);
-                }
+        try
+        {
+            UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e)
+        {
+            throw new RuntimeException(e);
+        }
 
-                Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
-                mainSize = size;
+        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+        mainSize = size;
 
-                JFrame frame = new JFrame("GUI Launcher");
-                mainFrame = frame;
+        JFrame frame = new JFrame("GUI Launcher");
+        mainFrame = frame;
 
-                frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-                frame.setPreferredSize(size);
+        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        frame.setSize(size);
 
-                Image buttonImg;
-                Image pressedButtonImg;
-                Image disabledButtonImg;
-                try
-                {
-                    buttonImg = ImageIO.read(new File("pics\\button.png"));
-                    pressedButtonImg = ImageIO.read(new File("pics\\pressed_button.png"));
-                    disabledButtonImg = ImageIO.read(new File("pics\\disabled_button.png"));
-                } catch (IOException e)
-                {
-                    throw new RuntimeException(e);
-                }
-                Image scaledButtonImage = buttonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
-                Image scaledPressedButtonImg = pressedButtonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
-                Image scaledDisabledButtonImg = disabledButtonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
+        Container container = frame.getContentPane();
+        container.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-                JButton bHelp = new ImageTextButton("Help", scaledButtonImage, scaledPressedButtonImg, scaledDisabledButtonImg);;
-                bHelp.setBounds(size.width / 2 - size.width / 10, 2 * size.height / 3, size.width / 5, size.height / 10);
-                bHelp.setFont(new Font("Times New Roman", Font.BOLD, 25));
-                bHelp.setForeground(Color.lightGray);
+        JButton bHelp = createCommandButton(new Help());
+        JButton bAdd = createCommandButton(new Add());
+        JButton bExecuteScript = createCommandButton(new ExecuteScript());
+        JButton bClear = createCommandButton(new Clear());
+        JButton bInfo = createCommandButton(new Info());
+        JButton bMaxByMeleeWeapon = createCommandButton(new MaxByMeleeWeapon());
+        JButton bPrintUniqueChapter = createCommandButton(new PrintUniqueChapter());
+        JButton bRemoveAllByHeath = createCommandButton(new RemoveAllByHealth());
+        JButton bRemoveByID = createCommandButton(new RemoveByID());
+        JButton bRemoveGreater = createCommandButton(new RemoveGreater());
+        JButton bRemoveLower = createCommandButton(new RemoveLower());
+        JButton bShow = createCommandButton(new Show());
+        JButton bUpdate = createCommandButton(new Update());
 
-                CommandButtonListener help = new CommandButtonListener(bHelp, new Help());
+        container.add(bHelp);
+        container.add(bAdd);
+        container.add(bExecuteScript);
+        container.add(bClear);
+        container.add(bInfo);
+        container.add(bMaxByMeleeWeapon);
+        container.add(bPrintUniqueChapter);
+        container.add(bRemoveAllByHeath);
+        container.add(bRemoveByID);
+        container.add(bRemoveGreater);
+        container.add(bRemoveLower);
+        container.add(bShow);
+        container.add(bUpdate);
+        container.setPreferredSize(size);
+        //frame.pack();
+        frame.setVisible(true);
+    }
 
-                bHelp.addActionListener(help);
-                frame.getContentPane().add(bHelp);
-                frame.pack();
-                frame.setVisible(true);
-//            }
-//        });
+    private static JButton createCommandButton (Command command)
+    {
+        Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
+        Image buttonImg;
+        Image pressedButtonImg;
+        Image disabledButtonImg;
+        try
+        {
+            buttonImg = ImageIO.read(new File("pics\\button.png"));
+            pressedButtonImg = ImageIO.read(new File("pics\\pressed_button.png"));
+            disabledButtonImg = ImageIO.read(new File("pics\\disabled_button.png"));
+        } catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+        Image scaledButtonImage = buttonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
+        Image scaledPressedButtonImg = pressedButtonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
+        Image scaledDisabledButtonImg = disabledButtonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
+
+        JButton button = new ImageTextButton(command.getClass().getSimpleName(), scaledButtonImage, scaledPressedButtonImg, scaledDisabledButtonImg);;
+        //button.setBounds(size.width / 2 - size.width / 10, 2 * size.height / 3, size.width / 5, size.height / 10);
+        button.setPreferredSize(new Dimension(size.width / 5, size.height / 10));
+        button.setFont(new Font("Times New Roman", Font.BOLD, 25));
+        button.setForeground(Color.lightGray);
+
+        CommandButtonListener commandListener = new CommandButtonListener(button, command);
+
+        button.addActionListener(commandListener);
+
+
+        return button;
     }
 }

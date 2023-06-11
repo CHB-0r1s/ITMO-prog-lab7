@@ -6,8 +6,8 @@ import src.Command.ClientReceiver;
 import src.User.User;
 
 public class Show extends Command {
-    private final Receiver commandReceiver;
-    private final ClientReceiver clientReceiver;
+    public Show()
+    {}
 
     public Show(Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;

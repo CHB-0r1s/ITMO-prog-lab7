@@ -8,9 +8,9 @@ import src.User.User;
 import java.io.IOException;
 
 public class RemoveByID extends Command {
-    private final Receiver commandReceiver;
-    private final ClientReceiver clientReceiver;
 
+    public RemoveByID()
+    {}
     public RemoveByID (Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;
         this.clientReceiver = clientReceiver;

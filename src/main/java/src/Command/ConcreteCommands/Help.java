@@ -6,18 +6,13 @@ import src.Command.ClientReceiver;
 import src.User.User;
 
 public class Help extends Command{
-//        private Receiver commandReceiver;
-//        private ClientReceiver clientReceiver;
-//
     public Help(Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;
         this.clientReceiver = clientReceiver;
     }
 
     public Help()
-    {
-
-    }
+    {}
 
     @Override
     public void execute(User user) {

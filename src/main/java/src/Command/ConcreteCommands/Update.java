@@ -10,8 +10,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 
 public class Update extends Command {
-    private final Receiver commandReceiver;
-    private final ClientReceiver clientReceiver;
+    public Update()
+    {}
 
     public Update(Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;

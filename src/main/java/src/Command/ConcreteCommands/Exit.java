@@ -9,8 +9,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class Exit extends Command{
-    private final Receiver commandReceiver;
-    private final ClientReceiver clientReceiver;
+
+    public Exit()
+    {}
 
     public Exit(Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;

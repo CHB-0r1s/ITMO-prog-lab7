@@ -10,9 +10,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class RemoveLower extends Command {
-    private final Receiver commandReceiver;
-    private final ClientReceiver clientReceiver;
 
+    public RemoveLower()
+    {}
     public RemoveLower (Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;
         this.clientReceiver = clientReceiver;

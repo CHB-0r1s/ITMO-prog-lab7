@@ -6,8 +6,8 @@ import src.Command.ClientReceiver;
 import src.User.User;
 
 public class History extends Command{
-    private final Receiver commandReceiver;
-    private final ClientReceiver clientReceiver;
+    public History()
+    {}
 
     public History(Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;

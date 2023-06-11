@@ -12,9 +12,9 @@ import src.Command.ClientReceiver;
 import src.User.User;
 
 public class ExecuteScript extends Command {
-    private final Receiver commandReceiver;
-    private final ClientReceiver clientReceiver = null;
     private static String path;
+    public ExecuteScript()
+    {}
 
     public ExecuteScript(Receiver commandReceiver) {
         this.commandReceiver = commandReceiver;

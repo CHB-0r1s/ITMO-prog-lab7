@@ -10,13 +10,14 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class Add extends Command {
-    private final Receiver commandReceiver;
-    private final ClientReceiver clientReceiver;
 
     public Add(Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;
         this.clientReceiver = clientReceiver;
     }
+
+    public  Add()
+    {}
 
     @Override
     public void execute(User user) throws IOException, SQLException, ClassNotFoundException {

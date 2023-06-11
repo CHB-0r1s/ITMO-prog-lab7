@@ -9,9 +9,9 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class RemoveAllByHealth extends Command {
-    private final Receiver commandReceiver;
-    private final ClientReceiver clientReceiver;
 
+    public RemoveAllByHealth()
+    {}
     public RemoveAllByHealth (Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;
         this.clientReceiver = clientReceiver;

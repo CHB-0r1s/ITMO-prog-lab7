@@ -6,8 +6,8 @@ import src.Command.ClientReceiver;
 import src.User.User;
 
 public class MaxByMeleeWeapon extends Command{
-    private final Receiver commandReceiver;
-    private final ClientReceiver clientReceiver;
+    public MaxByMeleeWeapon()
+    {}
     public MaxByMeleeWeapon(Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;
         this.clientReceiver = clientReceiver;

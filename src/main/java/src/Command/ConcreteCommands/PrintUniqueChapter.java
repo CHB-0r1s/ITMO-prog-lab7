@@ -6,8 +6,9 @@ import src.Command.ClientReceiver;
 import src.User.User;
 
 public class PrintUniqueChapter extends Command{
-    private final Receiver commandReceiver;
-    private final ClientReceiver clientReceiver;
+
+    public PrintUniqueChapter()
+    {}
     public PrintUniqueChapter(Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;
         this.clientReceiver = clientReceiver;

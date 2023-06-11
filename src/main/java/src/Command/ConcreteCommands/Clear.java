@@ -9,13 +9,13 @@ import java.io.IOException;
 import java.sql.SQLException;
 
 public class Clear extends Command {
-    private final Receiver commandReceiver;
-    private final ClientReceiver clientReceiver;
 
     public Clear(Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;
         this.clientReceiver = clientReceiver;
     }
+    public Clear()
+    {}
 
     @Override
     public void execute(User user) throws IOException, SQLException, ClassNotFoundException {
