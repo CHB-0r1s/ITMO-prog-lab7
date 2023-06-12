@@ -12,6 +12,7 @@ import src.GUI.GUI_AppOperations;
 import src.Utils.ManagerOfCollection;
 
 import javax.swing.*;
+import java.io.File;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
@@ -19,28 +20,6 @@ import java.util.Scanner;
 public class Main {
     public static void main(String[] args) {
 
-        String [] astartesCategory = AstartesCategory.getList();
-        String [] weapon = Weapon.getList();
-        String [] meleeWeapon = MeleeWeapon.getList();
-
-        AstartesCategory astartesCategoryObj = Enum.valueOf(AstartesCategory.class, JOptionPane.showInputDialog(
-                GUI_AppOperations.getMainFrame(),
-                null,
-                "AstartesCategory",
-                JOptionPane.QUESTION_MESSAGE,
-                null, astartesCategory, astartesCategory[0]).toString());
-        Weapon weaponObj = Enum.valueOf(Weapon.class, JOptionPane.showInputDialog(
-                GUI_AppOperations.getMainFrame(),
-                null,
-                "Weapon",
-                JOptionPane.QUESTION_MESSAGE,
-                null, weapon, weapon[0]).toString());
-        MeleeWeapon meleeWeaponObj = Enum.valueOf(MeleeWeapon.class, JOptionPane.showInputDialog(
-                GUI_AppOperations.getMainFrame(),
-                null,
-                "Weapon",
-                JOptionPane.QUESTION_MESSAGE,
-                null, meleeWeapon, meleeWeapon[0]).toString());
 
 //        ManagerOfCollection.createMyCollection();
 //        if (args[0].length() > 0) {

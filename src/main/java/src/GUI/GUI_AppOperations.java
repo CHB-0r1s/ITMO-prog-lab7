@@ -3,8 +3,7 @@ package src.GUI;
 import src.ClientServer.ClientStreams;
 import src.Command.Command;
 import src.Command.ConcreteCommands.*;
-import src.GUI.CommandButtons.AddListener;
-import src.GUI.CommandButtons.CommandButtonListener;
+import src.GUI.CommandButtons.*;
 import src.User.User;
 
 import javax.imageio.ImageIO;
@@ -51,21 +50,50 @@ public class GUI_AppOperations
 
         JButton bHelp = createCommandButton(new Help());
 
+        //commands with obj
         Add add = new Add();
         JButton bAdd = createCommandButton(add);
-        AddListener addListener = new AddListener(add);
+        ObjCreatorListener addListener = new ObjCreatorListener(add);
         bAdd.addActionListener(addListener);
-        JButton bExecuteScript = createCommandButton(new ExecuteScript());
+
+        Update update = new Update();
+        JButton bUpdate = createCommandButton(new Update());
+        ObjCreatorListener updateListener = new ObjCreatorListener(update);
+        bUpdate.addActionListener(updateListener);
+
+        RemoveGreater removeGreater = new RemoveGreater();
+        JButton bRemoveGreater = createCommandButton(new RemoveGreater());
+        ObjCreatorListener removeGreaterListener = new ObjCreatorListener(removeGreater);
+        bRemoveGreater.addActionListener(removeGreaterListener);
+
+        RemoveLower removeLower = new RemoveLower();
+        JButton bRemoveLower = createCommandButton(new RemoveLower());
+        ObjCreatorListener removeLowerListener = new ObjCreatorListener(removeLower);
+        bRemoveLower.addActionListener(removeLowerListener);
+
+        //commands with simple extra data
+        RemoveAllByHealth removeAllByHealth = new RemoveAllByHealth();
+        JButton bRemoveAllByHeath = createCommandButton(removeAllByHealth);
+        HealthListener healthListener = new HealthListener(removeAllByHealth);
+        bRemoveAllByHeath.addActionListener(healthListener);
+
+        RemoveByID removeByID = new RemoveByID();
+        JButton bRemoveByID = createCommandButton(removeByID);
+        IDListener idListener = new IDListener(removeByID);
+        bRemoveByID.addActionListener(idListener);
+
+        //execute script :(
+        ExecuteScript executeScript = new ExecuteScript();
+        JButton bExecuteScript = createCommandButton(executeScript);
+        ExecuteScriptListener executeScriptListener = new ExecuteScriptListener(executeScript);
+        bExecuteScript.addActionListener(executeScriptListener);
+
+        //the simplest commands
         JButton bClear = createCommandButton(new Clear());
         JButton bInfo = createCommandButton(new Info());
+        JButton bShow = createCommandButton(new Show());
         JButton bMaxByMeleeWeapon = createCommandButton(new MaxByMeleeWeapon());
         JButton bPrintUniqueChapter = createCommandButton(new PrintUniqueChapter());
-        JButton bRemoveAllByHeath = createCommandButton(new RemoveAllByHealth());
-        JButton bRemoveByID = createCommandButton(new RemoveByID());
-        JButton bRemoveGreater = createCommandButton(new RemoveGreater());
-        JButton bRemoveLower = createCommandButton(new RemoveLower());
-        JButton bShow = createCommandButton(new Show());
-        JButton bUpdate = createCommandButton(new Update());
 
         container.add(bHelp);
         container.add(bAdd);

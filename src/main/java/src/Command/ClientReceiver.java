@@ -90,7 +90,7 @@ public class ClientReceiver implements Serializable {
 
     private static ArrayList<String> fileNamesForNoRecursion = new ArrayList<>();
 
-    public ArrayList<Command> getCommandsFromScript (String fileName) throws IOException
+    public static ArrayList<Command> getCommandsFromScript (String fileName) throws IOException
     {
         fileNamesForNoRecursion.add(fileName);
         File file = new File(fileName);
@@ -99,7 +99,7 @@ public class ClientReceiver implements Serializable {
         String commandLine;
         ArrayList<String> parameters = new ArrayList<>();
         ArrayList<Command> commands = new ArrayList<>();
-        Invoker invoker = commandInvoker;
+        Invoker invoker = new Invoker();
         SpaceMarine spaceMarine = null;
         Command command = null;
         invoker.fillHashMap();
@@ -201,7 +201,7 @@ public class ClientReceiver implements Serializable {
         return getListInsideExecuteScript(commands);
     }
 
-    private ArrayList<Command> getListInsideExecuteScript(ArrayList<Command> commands)
+    private static ArrayList<Command> getListInsideExecuteScript(ArrayList<Command> commands)
     {
         ArrayList<Command> buffCommands = new ArrayList<>();
         for(Command command : commands)

@@ -4,20 +4,17 @@ import src.BaseObjects.*;
 import src.BaseObjects.MeleeWeapon;
 import src.BaseObjects.Weapon;
 import src.Command.Command;
-import src.GUI.ClientGUI;
 import src.GUI.GUI_AppOperations;
-import src.Utils.MyReaders.*;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Locale;
 
-public class AddListener implements ActionListener
+public class ObjCreatorListener implements ActionListener
 {
-    Command command;
+    private Command command;
 
-    public AddListener(Command command) {this.command = command;}
+    public ObjCreatorListener(Command command) {this.command = command;}
 
     @Override
     public void actionPerformed(ActionEvent e)
@@ -41,36 +38,27 @@ public class AddListener implements ActionListener
         Float xObj;
         Double yObj;
         Float healthObj;
-            while (true)
+        while (true)
+        {
+            try
             {
-                try
-                {
-                    NotNullStringsDialogWindow xWindow = new NotNullStringsDialogWindow
-                            (GUI_AppOperations.getMainFrame(), "X (coordinates)");
-                    xObj = Float.parseFloat(xWindow.getInputValue());
-                    break;
-                } catch (NumberFormatException ex) {}
-            }
-            while (true)
+                NotNullStringsDialogWindow xWindow = new NotNullStringsDialogWindow
+                        (GUI_AppOperations.getMainFrame(), "X (coordinates)");
+                xObj = Float.parseFloat(xWindow.getInputValue());
+                break;
+            } catch (NumberFormatException ex) {}
+        }
+        while (true)
+        {
+            try
             {
-                try
-                {
-                    NotNullStringsDialogWindow yWindow = new NotNullStringsDialogWindow
-                            (GUI_AppOperations.getMainFrame(), "Y (coordinates)");
-                    yObj = Double.parseDouble(yWindow.getInputValue());
-                    break;
-                } catch (NumberFormatException ex) {}
-            }
-            while (true)
-            {
-                try
-                {
-                    NotNullStringsDialogWindow healthWindow = new NotNullStringsDialogWindow
-                            (GUI_AppOperations.getMainFrame(), "Health");
-                    healthObj = Float.parseFloat(healthWindow.getInputValue());
-                    break;
-                } catch (NumberFormatException ex) {}
-            }
+                NotNullStringsDialogWindow yWindow = new NotNullStringsDialogWindow
+                        (GUI_AppOperations.getMainFrame(), "Y (coordinates)");
+                yObj = Double.parseDouble(yWindow.getInputValue());
+                break;
+            } catch (NumberFormatException ex) {}
+        }
+        healthObj = getHealthFromGUI();
 
         AstartesCategory astartesCategoryObj = Enum.valueOf(AstartesCategory.class, JOptionPane.showInputDialog(
                 GUI_AppOperations.getMainFrame(),
@@ -99,5 +87,33 @@ public class AddListener implements ActionListener
                 weaponObj, meleeWeaponObj, chapter);
 
         command.setExtraDataFromClient(spaceMarine);
+    }
+
+    public static Float getHealthFromGUI()
+    {
+        while (true)
+        {
+            try
+            {
+                NotNullStringsDialogWindow healthWindow = new NotNullStringsDialogWindow
+                        (GUI_AppOperations.getMainFrame(), "Health");
+                Float healthObj = Float.parseFloat(healthWindow.getInputValue());
+                return healthObj;
+            } catch (NumberFormatException ex) {}
+        }
+    }
+
+    public static Long getIDFromGUI()
+    {
+        while (true)
+        {
+            try
+            {
+                NotNullStringsDialogWindow healthWindow = new NotNullStringsDialogWindow
+                        (GUI_AppOperations.getMainFrame(), "Health");
+                Long ID = Long.parseLong(healthWindow.getInputValue());
+                return ID;
+            } catch (NumberFormatException ex) {}
+        }
     }
 }
