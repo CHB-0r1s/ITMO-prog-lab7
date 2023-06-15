@@ -5,6 +5,7 @@ import src.BaseObjects.*;
 import src.User.User;
 import src.Utils.HeliosConnectable;
 import src.Utils.ManagerOfCollection;
+import src.Utils.OutputToXml;
 
 import java.io.*;
 import java.sql.Connection;
@@ -20,36 +21,48 @@ public class Receiver implements Serializable{
         this.commandInvoker = commandInvoker;
         properties.load(new FileReader(file));
     }
-
+    //xml and l10n
     public void help(User user) {
-        user.setLanguage("Eng");
-
         StringJoiner joiner = new StringJoiner("");
 
         for (Map.Entry<String, Command> commandEntry: commandInvoker.invokerHashMap.entrySet()) {
             String propKey = user.getLanguage() + "." + commandEntry.getValue().writeInfo();
-            joiner.add("<command><name>" + commandEntry.getKey() +
-                    "</name><description>" + properties.getProperty(propKey) +
-                    "</description></command>");
+            joiner.add(
+                    "<command>" +
+                            "<name>" + commandEntry.getKey() + "</name>" +
+                            "<description>" + properties.getProperty(propKey) + "</description>" +
+                    "</command>"
+            );
         }
         String stringOutput = joiner.toString();
-        commandInvoker.invokerHashMap.forEach((name, command) -> command.writeInfo());
-        //System.out.println(stringOutput);
+        // commandInvoker.invokerHashMap.forEach((name, command) -> command.writeInfo());
+
         System.out.println("<?xml version=\"1.0\"?><commands>" + stringOutput + "</commands>");
     }
 
-    //xml
-    public void info() {
+    //xml and l10n
+    public void info(User user) {
         String stringOutput = ManagerOfCollection.getInformationAbout();
-        System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
+        System.out.println("<?xml version=\"1.0\"?><collectionInfo>" + stringOutput + "</collectionInfo>");
     }
 
+    //xml and l10n
     public void show() {
-        ManagerOfCollection.show();
+        TreeSet<SpaceMarine> myCollection = ManagerOfCollection.getMyCollection();
+        StringJoiner joiner = new StringJoiner("");
+
+        for (SpaceMarine spaceMarine: myCollection) {
+            joiner.add(OutputToXml.marineOutput(spaceMarine));
+        }
+        String stringOutput = joiner.toString();
+
+        System.out.println("<?xml version=\"1.0\"?><spaceMarines>" + stringOutput + "</spaceMarines>");
+
     }
-    //xml
+
+    //xml and l10n
     public void add(User user, SpaceMarine spaceMarineFromClient) throws SQLException, ClassNotFoundException {
-        user.setLanguage("Eng");
+
         spaceMarineFromClient.setCreatedBy(user.getLogin());
         Connection con = HeliosConnectable.createConToDB();
         ManagerOfCollection.insertSpaceMarine(spaceMarineFromClient, con);
@@ -58,85 +71,107 @@ public class Receiver implements Serializable{
 
         String propKey = user.getLanguage() + ".Command.Add.execute";
         String stringOutput = properties.getProperty(propKey) + " " + id;
-        //System.out.println(stringOutput);
+
         System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
 
         spaceMarineFromClient.setId(id);
         ManagerOfCollection.add(spaceMarineFromClient);
     }
     // TODO: перетянуть все юзер чеки в менеджер
-    //xml
+
+    //xml and l10n
     public void update(Long id, SpaceMarine spaceMarineFromClient, User user) {
+        String propKey = user.getLanguage() + ".Command.Update.execute.";
         try {
             long ID = id;
             if (ManagerOfCollection.elemExist(ID)) {
                 if (Objects.equals(ManagerOfCollection.getElemByID(id).getCreatedBy(), user.getLogin())) {
                     ManagerOfCollection.update(spaceMarineFromClient, ID);
+
+                    propKey += "Success";
+                    String stringOutput = properties.getProperty(propKey);
+
+                    System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
+
                     ManagerOfCollection.save();
 
-                    String stringOutput = "Update completed";
-                    //System.out.println(stringOutput);
-                    System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
                 }
                 else {
-                    String stringOutput = "You can not modify this object!!!";
-                    //System.out.println(stringOutput);
+                    propKey += "Unacceptable";
+                    String stringOutput = properties.getProperty(propKey);
+
                     System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
                 }
             }
             else {
-                String stringOutput = "The item with this ID is not in the collection.";
-                //System.out.println(stringOutput);
+                propKey += "Empty";
+                String stringOutput = properties.getProperty(propKey);
+
                 System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
             }
-        } catch (NumberFormatException e) {
-            String stringOutput = "The command is not executed. You have entered an incorrect argument.";
-            //System.out.println(stringOutput);
+        }
+        catch (NumberFormatException e) {
+            propKey += "Error";
+            String stringOutput = properties.getProperty(propKey);
+
             System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
-        } catch (IOException | ClassNotFoundException | SQLException e) {
+        }
+        catch (IOException | ClassNotFoundException | SQLException e) {
             throw new RuntimeException(e);
         }
     }
 
-    //xml
+    //xml and l10n
     public void remove_by_id(Long id, User user) {
+        String propKey = user.getLanguage() + ".Command.RemoveById.execute.";
         try {
             long ID = id;
             if (ManagerOfCollection.elemExist(ID)) {
                 if (Objects.equals(ManagerOfCollection.getElemByID(id).getCreatedBy(), user.getLogin())) {
                     ManagerOfCollection.remove_by_id(ID);
-                    String stringOutput = "Element with ID " + ID + " was deleted successfully";
-                    //System.out.println(stringOutput);
+                    System.err.println("А я из ранинга вышел");
+                    propKey += "Success";
+                    String stringOutput = properties.getProperty(propKey) + " " + ID;
+
                     System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
+
+                    ManagerOfCollection.save();
 
                 }
                 else {
-                    String stringOutput = "This user can not modify this object!!!";
-                    //System.out.println(stringOutput);
+                    propKey += "Unacceptable";
+                    String stringOutput = properties.getProperty(propKey);
+
                     System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
                 }
             } else {
-                String stringOutput = "There is no element with such ID in the collection";
-                //System.out.println(stringOutput);
+                propKey += "Empty";
+                String stringOutput = properties.getProperty(propKey);
+
                 System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
             }
         } catch (NumberFormatException e) {
-            String stringOutput = "The command is not executed. You have entered an incorrect argument.";
-            //System.out.println(stringOutput);
+            propKey += "Error";
+            String stringOutput = properties.getProperty(propKey);
+
             System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
+        } catch (SQLException | IOException | ClassNotFoundException e) {
+            throw new RuntimeException(e);
         }
     }
 
-    //xml
+    //xml and l10n
     public void clear(User user) throws IOException, SQLException, ClassNotFoundException {
         ManagerOfCollection.clear(user);
-        String stringOutput = "All the items available to you have been removed";
-        //System.out.println(stringOutput);
+
+        String propKey = user.getLanguage() + ".Command.Clear.execute";
+        String stringOutput = properties.getProperty(propKey);
+
         System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
         ManagerOfCollection.save();
     }
 
-    //xml
+    //TODO: slomano
     public void exit() throws IOException, SQLException, ClassNotFoundException {
 //        String stringOutput = "Save you progress in collection? [yes/no]";
 //        //System.out.println(stringOutput);
@@ -164,21 +199,34 @@ public class Receiver implements Serializable{
 //        System.exit(0);
     }
 
+    //xml and l10n
     public void remove_greater(SpaceMarine spaceMarineFromClient, User user) throws IOException, SQLException, ClassNotFoundException {
-        ManagerOfCollection.remove_greater(spaceMarineFromClient, user);
+        int removed_items = ManagerOfCollection.remove_greater(spaceMarineFromClient, user);
+        String propKey = user.getLanguage() + ".Command.RemoveGreater.execute";
+
+        String stringOutput = removed_items + " " + properties.getProperty(propKey);
+        System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
+
         ManagerOfCollection.save();
     }
 
+    //xml and l10n
     public void remove_lower(SpaceMarine spaceMarineFromClient, User user) throws IOException, SQLException, ClassNotFoundException {
-        ManagerOfCollection.remove_lower(spaceMarineFromClient, user);
+        int removed_items = ManagerOfCollection.remove_lower(spaceMarineFromClient, user);
+
+        String propKey = user.getLanguage() + ".Command.RemoveLower.execute";
+        String stringOutput = removed_items + " " + properties.getProperty(propKey);
+        System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
+
         ManagerOfCollection.save();
     }
 
+    //xml and l10n
     public void save() throws IOException, SQLException, ClassNotFoundException {
         ManagerOfCollection.save();
     }
 
-    //slomano
+    //TODO: slomano
     public void history() {
         if (commandInvoker.invokerListOfCommand.size() >= 11) {
             for (int i = commandInvoker.invokerListOfCommand.size() - 1; i > commandInvoker.invokerListOfCommand.size() - 11; i--) {
@@ -190,19 +238,45 @@ public class Receiver implements Serializable{
         }
     }
 
+    //xml and l10n
     public void remove_all_by_health(Double health, User user) throws IOException, SQLException, ClassNotFoundException {
         double HP = health;
 
-        ManagerOfCollection.remove_all_by_health(HP, user);
+        int removed_items = ManagerOfCollection.remove_all_by_health(HP, user);
+
+
+        String propKey = user.getLanguage() + ".Command.RemoveAllByHealth.execute";
+        String stringOutput = removed_items + " " + properties.getProperty(propKey);
+        System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
+
+        System.out.println(removed_items + stringOutput);
         ManagerOfCollection.save();
     }
 
-    public void max_by_melee_weapon() {
-        ManagerOfCollection.max_by_melee_weapon();
+    //xml and l10n
+    public void max_by_melee_weapon(User user) {
+        SpaceMarine spaceMarine = ManagerOfCollection.max_by_melee_weapon();
+        if (spaceMarine != null) {
+            System.out.println(OutputToXml.marineOutput(spaceMarine));
+        }
+        else {
+            String propKey = user.getLanguage() + ".Command.MaxByMeleeWeapon.execute.Error";
+            String stringOutput = properties.getProperty(propKey);
+
+            System.out.println("<?xml version=\"1.0\"?><otvet>" + stringOutput + "</otvet>");
+        } // Будет null, если максимального элемента нет
     }
 
+    //xml and l10n
     public void print_unique_chapter() {
-        ManagerOfCollection.print_unique_chapter();
+        TreeSet<Chapter> uniqueChapters = ManagerOfCollection.print_unique_chapter();
+        StringJoiner joiner = new StringJoiner("");
+
+        for (Chapter chapter: uniqueChapters) {
+            joiner.add(OutputToXml.chaptersOutput(chapter));
+        }
+
+        System.out.println("<chapters>" + joiner + "</chapters>");
     }
 
 }

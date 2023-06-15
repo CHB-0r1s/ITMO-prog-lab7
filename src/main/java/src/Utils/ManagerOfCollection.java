@@ -78,11 +78,9 @@ public class ManagerOfCollection implements HeliosConnectable{
     }
 
     public static String getInformationAbout() {
-        return  "Information about the collection: \n" +
-                "Collection Type - " + myCollection.getClass().getName() + "\n" +
-                "Date the collection was created - " + dateOfCreate + "\n" +
-                "Number of elements - " + myCollection.size() + "\n" +
-                "_________________________________________________________\n";
+        return  "<collectionType> - " + myCollection.getClass().getName() + "</collectionType>" +
+                "<createdDate>" + dateOfCreate + "</createdDate>" +
+                "<numberOfElements>" + myCollection.size() + "</numberOfElements>";
 
     }
 
@@ -92,25 +90,6 @@ public class ManagerOfCollection implements HeliosConnectable{
 
     public static TreeSet<SpaceMarine> getMyCollection() {
         return myCollection;
-    }
-
-    public static void show() {
-        for (SpaceMarine spaceMarine: myCollection) {
-            StringJoiner stringJoiner = new StringJoiner("");
-            
-            System.out.println("Object ID - " + spaceMarine.getId());
-            System.out.println("Object name - " + spaceMarine.getName());
-            System.out.println("The X coordinate of the object - " + spaceMarine.getCoordinates().getX());
-            System.out.println("The Y coordinate of the object - " + spaceMarine.getCoordinates().getY());
-            System.out.println("Date and time of object creation - " + spaceMarine.getCreationDate());
-            System.out.println("Object health - " + spaceMarine.getHealth());
-            System.out.println("Object category - " + spaceMarine.getCategory());
-            System.out.println("Object's weapon - " + spaceMarine.getWeaponType());
-            System.out.println("Melee weapons of the object - " + spaceMarine.getMeleeWeapon());
-            System.out.println("Location of the object - " + spaceMarine.getChapter().getName() + ":" + spaceMarine.getChapter().getParentLegion());
-            System.out.println("Creator of the object - " + spaceMarine.getCreatedBy());
-            System.out.println("_________________________________________________________\n");
-        }
     }
 
     public static void update(SpaceMarine marineToUpdate, long elementId) {
@@ -147,13 +126,8 @@ public class ManagerOfCollection implements HeliosConnectable{
     }
 
     public static void remove_by_id(long ID) {
-        myCollection.forEach(
-                spaceMarine -> {
-                    if (spaceMarine.getId() == ID) {
-                        myCollection.remove(spaceMarine);
-                    }
-                }
-        );
+        SpaceMarine spaceMarine = ManagerOfCollection.getElemByID(ID);
+        myCollection.remove(spaceMarine);
     }
 
     public static void clear(User user) {
@@ -163,7 +137,7 @@ public class ManagerOfCollection implements HeliosConnectable{
                         myCollection.remove(spaceMarine);
                     }
                 });
-        myCollection.clear();
+        //myCollection.clear();
     }
 
     public static Long getCurrentIdInPostgres() throws SQLException, ClassNotFoundException {
@@ -175,34 +149,36 @@ public class ManagerOfCollection implements HeliosConnectable{
 
     }
 
-    public static void remove_greater(SpaceMarine spaceMarine, User user) {
-        AtomicInteger x = new AtomicInteger();
+    public static int remove_greater(SpaceMarine spaceMarine, User user) {
+        TreeSet<SpaceMarine> treeSetForRemove = new TreeSet<>();
 
-        myCollection.forEach(
-                spaceMarine1 -> {
-                    if (spaceMarine1.compareTo(spaceMarine) > 0 &&
-                            Objects.equals(spaceMarine.getCreatedBy(), user.getLogin())) {
-                        myCollection.remove(spaceMarine1);
-                        x.getAndIncrement();
-                    }
-                }
-        );
-        System.out.println(x + "items what you can modify found and removed.");
+        for (SpaceMarine otherSpaceMarine: myCollection) {
+            if (otherSpaceMarine.compareTo(spaceMarine) > 0 &&
+                    Objects.equals(otherSpaceMarine.getCreatedBy(), user.getLogin())) {
+                treeSetForRemove.add(otherSpaceMarine);
+            }
+        }
+
+        for (SpaceMarine spaceMarineForRemove: treeSetForRemove) {
+            myCollection.remove(spaceMarineForRemove);
+        }
+        return treeSetForRemove.size();
     }
 
-    public static void remove_lower(SpaceMarine spaceMarine, User user) {
-        AtomicInteger x = new AtomicInteger();
+    public static int remove_lower(SpaceMarine spaceMarine, User user) {
+        TreeSet<SpaceMarine> treeSetForRemove = new TreeSet<>();
 
-        myCollection.forEach(
-                spaceMarine1 -> {
-                    if (spaceMarine1.compareTo(spaceMarine) < 0 &&
-                            Objects.equals(spaceMarine.getCreatedBy(), user.getLogin())) {
-                        myCollection.remove(spaceMarine1);
-                        x.getAndIncrement();
-                    }
-                }
-        );
-        System.out.println(x + "items what you can modify found and removed.");
+        for (SpaceMarine otherSpaceMarine: myCollection) {
+            if (otherSpaceMarine.compareTo(spaceMarine) < 0 &&
+                    Objects.equals(otherSpaceMarine.getCreatedBy(), user.getLogin())) {
+                treeSetForRemove.add(otherSpaceMarine);
+            }
+        }
+
+        for (SpaceMarine spaceMarineForRemove: treeSetForRemove) {
+            myCollection.remove(spaceMarineForRemove);
+        }
+        return treeSetForRemove.size();
     }
 
     public static void save() throws IOException, ClassNotFoundException, SQLException {
@@ -219,21 +195,24 @@ public class ManagerOfCollection implements HeliosConnectable{
         con.close();
     }
 
-    public static void remove_all_by_health(double HP, User user) {
-        AtomicInteger x = new AtomicInteger();
-        myCollection.forEach(
-                spaceMarine -> {
-                    if (spaceMarine.getHealth() == HP &&
-                            Objects.equals(spaceMarine.getCreatedBy(), user.getLogin())) {
-                        myCollection.remove(spaceMarine);
-                        x.getAndIncrement();
-                    }
-                }
-        );
-        System.out.println(x + "items what you can modify found and removed.");
+    public static int remove_all_by_health(double HP, User user) {
+        TreeSet<SpaceMarine> treeSetForRemove = new TreeSet<>();
+
+        for (SpaceMarine otherSpaceMarine: myCollection) {
+            if (otherSpaceMarine.getHealth() == HP &&
+                    Objects.equals(otherSpaceMarine.getCreatedBy(), user.getLogin())) {
+                treeSetForRemove.add(otherSpaceMarine);
+            }
+        }
+
+        for (SpaceMarine spaceMarineForRemove: treeSetForRemove) {
+            myCollection.remove(spaceMarineForRemove);
+        }
+
+        return treeSetForRemove.size();
     }
 
-    public static void max_by_melee_weapon() {
+    public static SpaceMarine max_by_melee_weapon() {
         MeleeWeapon[] list = MeleeWeapon.values();
         int maxLength = 0;
         MeleeWeapon maxMeleeWeapon = null;
@@ -249,33 +228,18 @@ public class ManagerOfCollection implements HeliosConnectable{
         for (SpaceMarine spaceMarine: myCollection) {
             assert finalMaxMeleeWeapon != null;
             if (Objects.equals(spaceMarine.getMeleeWeapon().toString(), finalMaxMeleeWeapon.toString())) {
-                System.out.println("Object's ID - " + spaceMarine.getId());
-                System.out.println("Object's name - " + spaceMarine.getName());
-                System.out.println("The X coordinate of the object - " + spaceMarine.getCoordinates().getX());
-                System.out.println("The Y coordinate of the object -" + spaceMarine.getCoordinates().getY());
-                System.out.println("Date and time of object creation - " + spaceMarine.getCreationDate());
-                System.out.println("Object's health - " + spaceMarine.getHealth());
-                System.out.println("Object's category - " + spaceMarine.getCategory());
-                System.out.println("Object's weapon - " + spaceMarine.getWeaponType());
-                System.out.println("Melee weapons of the object - " + spaceMarine.getMeleeWeapon());
-                System.out.println("Location of the object - " + spaceMarine.getChapter().getName() + ":" + spaceMarine.getChapter().getParentLegion());
-                System.out.println("_________________________________________________________\n");
-                break;
+                return spaceMarine;
             }
         }
+        return null;
     }
 
-    public static void print_unique_chapter() {
+    public static TreeSet<Chapter> print_unique_chapter() {
         TreeSet<Chapter> setOfChapter = new TreeSet<>();
         for (SpaceMarine spaceMarine: myCollection) {
             setOfChapter.add(spaceMarine.getChapter());
         }
-
-        for (Chapter chapter: setOfChapter) {
-            System.out.println("name of the unique chapter:" + chapter.getName());
-            System.out.println("parentLegion of the unique chapter: " + chapter.getParentLegion());
-
-        }
+        return setOfChapter;
     }
 
     public static void fillFromPostgres() throws SQLException, ClassNotFoundException {

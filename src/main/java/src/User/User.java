@@ -17,6 +17,7 @@ public class User implements Serializable
         this.login = login;
         this.password = password;
         this.newable = newable;
+        this.language = "Eng";
     }
 
     public User (String login, String password)

@@ -15,7 +15,7 @@ public class MaxByMeleeWeapon extends Command{
 
     @Override
     public void execute(User user) {
-        commandReceiver.max_by_melee_weapon();
+        commandReceiver.max_by_melee_weapon(user);
     }
 
     @Override

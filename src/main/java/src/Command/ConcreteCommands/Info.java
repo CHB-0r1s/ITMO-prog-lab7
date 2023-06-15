@@ -17,7 +17,7 @@ public class Info extends Command {
 
     @Override
     public void execute(User user) {
-        commandReceiver.info();
+        commandReceiver.info(user);
     }
 
     @Override
