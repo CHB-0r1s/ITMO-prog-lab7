@@ -52,12 +52,24 @@ public class GUI_AppOperations
         Container container = frame.getContentPane();
         FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);
         container.setLayout(flowLayout);
-        container.setBackground(new Color(35,43,43));
+        container.setBackground(new Color(43, 35, 35));
 
+
+        Image beautiful;
+        try
+        {
+            beautiful = ImageIO.read(new File("pics\\bottom_pic.png"));
+        } catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+        Image scaledBeauPic = beautiful.getScaledInstance(size.width, size.height / 30, Image.SCALE_REPLICATE);
+        JLabel pic_label = new JLabel(new ImageIcon(scaledBeauPic));
 
 
         JScrollPane objects = createScrolledText(new Dimension(size.width, size.height/(2)), new Show());
         container.add(objects);
+        container.add(pic_label);
         JScrollPane others = createScrolledText(new Dimension(size.width, size.height/(4)), nullCmd);
         container.add(others);
 
@@ -182,7 +194,7 @@ public class GUI_AppOperations
 
     private static JScrollPane createScrolledText(Dimension dimension, Command command)
     {
-        JLabel label = new JLabel(ResponseToGUI.getHtml());
+        JLabel label = new JLabel(ResponseToGUI.getHtml(), SwingConstants.CENTER);
         label.setForeground(Color.LIGHT_GRAY);
         label.setFont(new Font("Times New Roman", Font.BOLD, 14));
         repainters.put(command.getClass(), label);

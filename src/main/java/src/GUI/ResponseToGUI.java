@@ -36,55 +36,11 @@ public class ResponseToGUI
             StreamSource xsltSource;
             if(command.getTableType())
             {
-                xsltSource = new StreamSource(new StringReader("" +
-                        "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n" +
-                        "  <xsl:output method=\"html\" indent=\"yes\"/>\n" +
-                        "  \n" +
-                        "  <xsl:template match=\"/\">\n" +
-                        "    <html>\n" +
-                        "      <body>\n" +
-                        "        <table border=\"1\">\n" +
-                        "          <xsl:apply-templates/>\n" +
-                        "        </table>\n" +
-                        "      </body>\n" +
-                        "    </html>\n" +
-                        "  </xsl:template>\n" +
-                        "  \n" +
-                        "  <xsl:template match=\"*\">\n" +
-                        "    <tr>\n" +
-                        "      <xsl:element name=\"{name()}\">\n" +
-                        "        <xsl:apply-templates/>\n" +
-                        "      </xsl:element>\n" +
-                        "    </tr>\n" +
-                        "  </xsl:template>\n" +
-                        "  \n" +
-                        "</xsl:stylesheet>\n"));
+                xsltSource = new StreamSource("TablePattern.xsl");
             }
             else
             {
-                xsltSource = new StreamSource(new StringReader("" +
-                        "<xsl:stylesheet version=\"1.0\" xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\">\n" +
-                        "  <xsl:output method=\"html\" indent=\"yes\"/>\n" +
-                        "  \n" +
-                        "  <xsl:template match=\"/\">\n" +
-                        "    <html>\n" +
-                        "      <body>\n" +
-                        "        <table border=\"1\">\n" +
-                        "          <xsl:apply-templates/>\n" +
-                        "        </table>\n" +
-                        "      </body>\n" +
-                        "    </html>\n" +
-                        "  </xsl:template>\n" +
-                        "  \n" +
-                        "  <xsl:template match=\"*\">\n" +
-                        "    <tr>\n" +
-                        "      <xsl:element name=\"{name()}\">\n" +
-                        "        <xsl:apply-templates/>\n" +
-                        "      </xsl:element>\n" +
-                        "    </tr>\n" +
-                        "  </xsl:template>\n" +
-                        "  \n" +
-                        "</xsl:stylesheet>\n"));
+                xsltSource = new StreamSource("NotTablePattern.xsl");
             }
             transformer = transformerFactory.newTransformer(xsltSource);
 
