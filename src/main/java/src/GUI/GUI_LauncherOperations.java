@@ -42,7 +42,7 @@ public class GUI_LauncherOperations
         button.setBounds(size.width / 2 - size.width / 10, 2 * size.height / 3, size.width / 5, size.height / 10);
         button.setFont(new Font("Times New Roman", Font.BOLD, 25));
         button.setForeground(Color.lightGray);
-        button.setPressedIcon(new ImageIcon(scaledPressedButtonImg));
+        //button.setPressedIcon(new ImageIcon(scaledPressedButtonImg));
 
         button.setHorizontalTextPosition(JButton.CENTER);
         button.setVerticalTextPosition(JButton.BOTTOM);

@@ -3,12 +3,17 @@ package src.GUI.CommandButtons;
 import src.ClientServer.ClientFunc;
 import src.Command.*;
 import src.GUI.ClientGUI;
+import src.GUI.GUI_AppOperations;
+import src.GUI.ResponseToGUI;
+import src.Multithreading.Response;
 import src.Utils.MyReaders.MyConfigReader;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.net.Socket;
 
 public class CommandButtonListener implements ActionListener
@@ -81,9 +86,20 @@ public class CommandButtonListener implements ActionListener
             }
         }
 
+        getResponse();
+    }
+
+    private void getResponse()
+    {
         try
         {
-            ClientFunc.readResponse(ClientGUI.getClientSocket());
+            ObjectInputStream objectInputStream = new ObjectInputStream(ClientGUI.getClientSocket().getInputStream());
+            Response response = (Response) objectInputStream.readObject();
+
+            ResponseToGUI.setXml(response.getMessage());
+            ResponseToGUI.setCommand(this.command);
+            ResponseToGUI.setHtml();
+            GUI_AppOperations.thingsForRepaint(this.command);
         } catch (IOException ex)
         {
             throw new RuntimeException(ex);

@@ -9,10 +9,13 @@ public class Help extends Command{
     public Help(Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;
         this.clientReceiver = clientReceiver;
+        super.tableTypeCommand = true;
     }
 
     public Help()
-    {}
+    {
+        super.tableTypeCommand = true;
+    }
 
     @Override
     public void execute(User user) {

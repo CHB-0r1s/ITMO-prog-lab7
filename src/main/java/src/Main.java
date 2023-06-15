@@ -1,25 +1,8 @@
 package src;
 
-import src.BaseObjects.AstartesCategory;
-import src.BaseObjects.MeleeWeapon;
-import src.BaseObjects.Weapon;
-import src.Command.Command;
-import src.Command.ConcreteCommands.*;
-import src.Command.Invoker;
-import src.Command.Receiver;
-import src.GUI.CommandButtons.NotNullStringsDialogWindow;
-import src.GUI.GUI_AppOperations;
-import src.Utils.ManagerOfCollection;
-
-import javax.swing.*;
-import java.io.File;
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) {
-
 
 //        ManagerOfCollection.createMyCollection();
 //        if (args[0].length() > 0) {

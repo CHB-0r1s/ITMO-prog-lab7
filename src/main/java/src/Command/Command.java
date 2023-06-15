@@ -15,6 +15,11 @@ public abstract class Command implements Serializable
     protected Receiver commandReceiver;
     protected ClientReceiver clientReceiver;
     private Object extraDataFromClient;
+    protected boolean tableTypeCommand = false;
+    public boolean getTableType()
+    {
+        return tableTypeCommand;
+    }
     public void setExtraDataFromClient(Object extraDataFromClient)
     {
         this.extraDataFromClient = extraDataFromClient;
