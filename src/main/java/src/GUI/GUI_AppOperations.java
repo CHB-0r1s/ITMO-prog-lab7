@@ -24,11 +24,6 @@ public class GUI_AppOperations
     {
         return mainFrame;
     }
-
-    private static User user = ClientGUI.getUser();
-    private static ClientStreams clientStreams = ClientGUI.getClientStreams();
-
-
     public static void App()
     {
         try
@@ -124,6 +119,10 @@ public class GUI_AppOperations
         JButton bPrintUniqueChapter = createCommandButton(new PrintUniqueChapter());
         JButton bHelp = createCommandButton(new Help());
 
+        //not a command
+        JButton bLang = createButton("Languages");
+        bLang.addActionListener(new LangListener());
+
         container.add(bHelp);
         container.add(bAdd);
         container.add(bExecuteScript);
@@ -138,6 +137,7 @@ public class GUI_AppOperations
         container.add(bShow);
         container.add(bUpdate);
         container.setPreferredSize(size);
+        container.add(bLang);
 
         //__________________commands___________________closed
 
@@ -208,6 +208,17 @@ public class GUI_AppOperations
 
     private static JButton createCommandButton (Command command)
     {
+        JButton button = createButton(command.getClass().getSimpleName());
+
+        CommandButtonListener commandListener = new CommandButtonListener(button, command);
+
+        button.addActionListener(commandListener);
+
+        return button;
+    }
+
+    private static JButton createButton(String line)
+    {
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
         Image buttonImg;
         Image pressedButtonImg;
@@ -225,16 +236,11 @@ public class GUI_AppOperations
         Image scaledPressedButtonImg = pressedButtonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
         Image scaledDisabledButtonImg = disabledButtonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
 
-        JButton button = new ImageTextButton(command.getClass().getSimpleName(), scaledButtonImage, scaledPressedButtonImg, scaledDisabledButtonImg);;
+        JButton button = new ImageTextButton(line, scaledButtonImage, scaledPressedButtonImg, scaledDisabledButtonImg);;
         //button.setBounds(size.width / 2 - size.width / 10, 2 * size.height / 3, size.width / 5, size.height / 10);
         button.setPreferredSize(new Dimension(size.width / 10, size.height / 20));
         button.setFont(new Font("Times New Roman", Font.BOLD, 15));
         button.setForeground(Color.lightGray);
-
-        CommandButtonListener commandListener = new CommandButtonListener(button, command);
-
-        button.addActionListener(commandListener);
-
 
         return button;
     }

@@ -21,31 +21,7 @@ public class GUI_LauncherOperations
         GUI_ConnectionToServer guiConnectionToServer = new GUI_ConnectionToServer();
         GUI_SendUser gui_sendUser = new GUI_SendUser();
 
-        Image buttonImg;
-        Image pressedButtonImg;
-        Image disabledButtonImg;
-        try
-        {
-            buttonImg = ImageIO.read(new File("pics\\button.png"));
-            pressedButtonImg = ImageIO.read(new File("pics\\pressed_button.png"));
-            disabledButtonImg = ImageIO.read(new File("pics\\disabled_button.png"));
-        } catch (IOException e)
-        {
-            throw new RuntimeException(e);
-        }
-        Image scaledButtonImage = buttonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
-        Image scaledPressedButtonImg = pressedButtonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
-        Image scaledDisabledButtonImg = disabledButtonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
-
-        JButton button = new LauncherButton("Connect", scaledButtonImage, scaledPressedButtonImg, scaledDisabledButtonImg);
-
-        button.setBounds(size.width / 2 - size.width / 10, 2 * size.height / 3, size.width / 5, size.height / 10);
-        button.setFont(new Font("Times New Roman", Font.BOLD, 25));
-        button.setForeground(Color.lightGray);
-        //button.setPressedIcon(new ImageIcon(scaledPressedButtonImg));
-
-        button.setHorizontalTextPosition(JButton.CENTER);
-        button.setVerticalTextPosition(JButton.BOTTOM);
+        JButton button = createButton(size, "Connect");
 
         guiConnectionToServer.setButton(button);
 
@@ -55,11 +31,6 @@ public class GUI_LauncherOperations
 
         frame.getContentPane().add(button);
         frame.getContentPane().add(label);
-    }
-
-    private static void clearFrame (JFrame frame)
-    {
-        frame.getContentPane().removeAll();
     }
 
     public static void registration()
@@ -109,5 +80,35 @@ public class GUI_LauncherOperations
         {
             throw new RuntimeException(e);
         }
+    }
+
+    private static JButton createButton(Dimension size, String text)
+    {
+        Image buttonImg;
+        Image pressedButtonImg;
+        Image disabledButtonImg;
+        try
+        {
+            buttonImg = ImageIO.read(new File("pics\\button.png"));
+            pressedButtonImg = ImageIO.read(new File("pics\\pressed_button.png"));
+            disabledButtonImg = ImageIO.read(new File("pics\\disabled_button.png"));
+        } catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+        Image scaledButtonImage = buttonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
+        Image scaledPressedButtonImg = pressedButtonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
+        Image scaledDisabledButtonImg = disabledButtonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
+
+        JButton button = new LauncherButton(text, scaledButtonImage, scaledPressedButtonImg, scaledDisabledButtonImg);
+
+        button.setBounds(size.width / 2 - size.width / 10, 2 * size.height / 3, size.width / 5, size.height / 10);
+        button.setFont(new Font("Times New Roman", Font.BOLD, 25));
+        button.setForeground(Color.lightGray);
+
+        button.setHorizontalTextPosition(JButton.CENTER);
+        button.setVerticalTextPosition(JButton.BOTTOM);
+
+        return button;
     }
 }
