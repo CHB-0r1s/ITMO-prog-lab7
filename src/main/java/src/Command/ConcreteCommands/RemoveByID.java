@@ -17,7 +17,7 @@ public class RemoveByID extends Command {
     }
 
     @Override
-    public void execute(User user) {
+    public void execute(User user) throws IOException {
 //        commandReceiver.remove_by_id(this.getLongFromClient());
         commandReceiver.remove_by_id((Long) this.getExtraDataFromClient(), user);
     }

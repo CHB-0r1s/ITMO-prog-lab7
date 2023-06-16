@@ -5,6 +5,8 @@ import src.Command.Receiver;
 import src.Command.ClientReceiver;
 import src.User.User;
 
+import java.io.IOException;
+
 public class MaxByMeleeWeapon extends Command{
     public MaxByMeleeWeapon()
     {}
@@ -14,7 +16,7 @@ public class MaxByMeleeWeapon extends Command{
     }
 
     @Override
-    public void execute(User user) {
+    public void execute(User user) throws IOException {
         commandReceiver.max_by_melee_weapon(user);
     }
 

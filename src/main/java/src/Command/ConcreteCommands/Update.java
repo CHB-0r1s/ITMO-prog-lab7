@@ -19,7 +19,7 @@ public class Update extends Command {
     }
 
     @Override
-    public void execute(User user) {
+    public void execute(User user) throws IOException {
 //        commandReceiver.update(this.getLongFromClient(), this.getSpaceMarineFromClient());
 //        commandReceiver.update();
         ArrayList<Object> buffer = (ArrayList<Object>) this.getExtraDataFromClient();

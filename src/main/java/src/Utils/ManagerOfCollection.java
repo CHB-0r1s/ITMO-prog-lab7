@@ -77,9 +77,9 @@ public class ManagerOfCollection implements HeliosConnectable{
         }
     }
 
-    public static String getInformationAbout() {
-        return  "<collectionType> - " + myCollection.getClass().getName() + "</collectionType>" +
-                "<createdDate>" + dateOfCreate + "</createdDate>" +
+    public static String getInformationAbout(String language) {
+        return  "<collectionType>" + myCollection.getClass().getName() + "</collectionType>" +
+                "<createdDate>" + dateOfCreate.format(OutputToXml.getDFormat(language)) + "</createdDate>" +
                 "<numberOfElements>" + myCollection.size() + "</numberOfElements>";
 
     }

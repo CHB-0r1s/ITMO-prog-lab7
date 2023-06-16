@@ -8,7 +8,8 @@ public enum Languages
 {
     ENG ("Eng"),
     RUS ("Rus"),
-    VENG ("Veng");
+    VENG ("Ven"),
+    MAK ("Mak");
     private final String lang;
     private Languages(String lang)
     {

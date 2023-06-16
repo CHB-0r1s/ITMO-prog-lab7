@@ -8,6 +8,7 @@ import src.Utils.ManagerOfCollection;
 import src.Utils.OutputToXml;
 
 import java.io.*;
+import java.nio.charset.StandardCharsets;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.*;
@@ -15,15 +16,17 @@ import java.util.*;
 
 public class Receiver implements Serializable{
     public final Invoker commandInvoker;
-    public final File file = new File("src\\main\\java\\src\\Command\\ConcreteCommands\\eng_lang.properties");
+    public final String path = "src\\main\\java\\src\\Command\\ConcreteCommands\\";
     public Properties properties = new Properties();
     public Receiver(Invoker commandInvoker) throws IOException {
         this.commandInvoker = commandInvoker;
-        properties.load(new FileReader(file));
+
     }
     //xml and l10n
-    public void help(User user) {
+    public void help(User user) throws IOException {
         StringJoiner joiner = new StringJoiner("");
+        Properties properties = new Properties();
+        properties.load(new FileReader(path + user.getLanguage() + ".properties", StandardCharsets.UTF_8));
 
         for (Map.Entry<String, Command> commandEntry: commandInvoker.invokerHashMap.entrySet()) {
             String propKey = user.getLanguage() + "." + commandEntry.getValue().writeInfo();
@@ -42,7 +45,7 @@ public class Receiver implements Serializable{
 
     //xml and l10n
     public void info(User user) {
-        String stringOutput = ManagerOfCollection.getInformationAbout();
+        String stringOutput = ManagerOfCollection.getInformationAbout(user.getLanguage());
         System.out.println("<?xml version=\"1.0\"?><collectionInfo>" + stringOutput + "</collectionInfo>");
     }
 
@@ -61,7 +64,9 @@ public class Receiver implements Serializable{
     }
 
     //xml and l10n
-    public void add(User user, SpaceMarine spaceMarineFromClient) throws SQLException, ClassNotFoundException {
+    public void add(User user, SpaceMarine spaceMarineFromClient) throws SQLException, ClassNotFoundException, IOException {
+        Properties properties = new Properties();
+        properties.load(new FileReader(path + user.getLanguage() + ".properties", StandardCharsets.UTF_8));
 
         spaceMarineFromClient.setCreatedBy(user.getLogin());
         Connection con = HeliosConnectable.createConToDB();
@@ -80,7 +85,9 @@ public class Receiver implements Serializable{
     // TODO: перетянуть все юзер чеки в менеджер
 
     //xml and l10n
-    public void update(Long id, SpaceMarine spaceMarineFromClient, User user) {
+    public void update(Long id, SpaceMarine spaceMarineFromClient, User user) throws IOException {
+        Properties properties = new Properties();
+        properties.load(new FileReader(path + user.getLanguage() + ".properties", StandardCharsets.UTF_8));
         String propKey = user.getLanguage() + ".Command.Update.execute.";
         try {
             long ID = id;
@@ -122,7 +129,9 @@ public class Receiver implements Serializable{
     }
 
     //xml and l10n
-    public void remove_by_id(Long id, User user) {
+    public void remove_by_id(Long id, User user) throws IOException {
+        Properties properties = new Properties();
+        properties.load(new FileReader(path + user.getLanguage() + ".properties", StandardCharsets.UTF_8));
         String propKey = user.getLanguage() + ".Command.RemoveById.execute.";
         try {
             long ID = id;
@@ -162,6 +171,8 @@ public class Receiver implements Serializable{
 
     //xml and l10n
     public void clear(User user) throws IOException, SQLException, ClassNotFoundException {
+        Properties properties = new Properties();
+        properties.load(new FileReader(path + user.getLanguage() + ".properties", StandardCharsets.UTF_8));
         ManagerOfCollection.clear(user);
 
         String propKey = user.getLanguage() + ".Command.Clear.execute";
@@ -171,7 +182,6 @@ public class Receiver implements Serializable{
         ManagerOfCollection.save();
     }
 
-    //TODO: slomano
     public void exit() throws IOException, SQLException, ClassNotFoundException {
 //        String stringOutput = "Save you progress in collection? [yes/no]";
 //        //System.out.println(stringOutput);
@@ -201,6 +211,8 @@ public class Receiver implements Serializable{
 
     //xml and l10n
     public void remove_greater(SpaceMarine spaceMarineFromClient, User user) throws IOException, SQLException, ClassNotFoundException {
+        Properties properties = new Properties();
+        properties.load(new FileReader(path + user.getLanguage() + ".properties", StandardCharsets.UTF_8));
         int removed_items = ManagerOfCollection.remove_greater(spaceMarineFromClient, user);
         String propKey = user.getLanguage() + ".Command.RemoveGreater.execute";
 
@@ -212,6 +224,8 @@ public class Receiver implements Serializable{
 
     //xml and l10n
     public void remove_lower(SpaceMarine spaceMarineFromClient, User user) throws IOException, SQLException, ClassNotFoundException {
+        Properties properties = new Properties();
+        properties.load(new FileReader(path + user.getLanguage() + ".properties", StandardCharsets.UTF_8));
         int removed_items = ManagerOfCollection.remove_lower(spaceMarineFromClient, user);
 
         String propKey = user.getLanguage() + ".Command.RemoveLower.execute";
@@ -240,6 +254,8 @@ public class Receiver implements Serializable{
 
     //xml and l10n
     public void remove_all_by_health(Double health, User user) throws IOException, SQLException, ClassNotFoundException {
+        Properties properties = new Properties();
+        properties.load(new FileReader(path + user.getLanguage() + ".properties", StandardCharsets.UTF_8));
         double HP = health;
 
         int removed_items = ManagerOfCollection.remove_all_by_health(HP, user);
@@ -254,7 +270,9 @@ public class Receiver implements Serializable{
     }
 
     //xml and l10n
-    public void max_by_melee_weapon(User user) {
+    public void max_by_melee_weapon(User user) throws IOException {
+        Properties properties = new Properties();
+        properties.load(new FileReader(path + user.getLanguage() + ".properties", StandardCharsets.UTF_8));
         SpaceMarine spaceMarine = ManagerOfCollection.max_by_melee_weapon();
         if (spaceMarine != null) {
             System.out.println(OutputToXml.marineOutput(spaceMarine, user.getLanguage()));

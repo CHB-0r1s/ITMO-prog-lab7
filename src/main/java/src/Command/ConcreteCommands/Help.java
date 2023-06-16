@@ -5,6 +5,8 @@ import src.Command.Receiver;
 import src.Command.ClientReceiver;
 import src.User.User;
 
+import java.io.IOException;
+
 public class Help extends Command{
     public Help(Receiver commandReceiver, ClientReceiver clientReceiver) {
         this.commandReceiver = commandReceiver;
@@ -18,7 +20,7 @@ public class Help extends Command{
     }
 
     @Override
-    public void execute(User user) {
+    public void execute(User user) throws IOException {
         super.commandReceiver.help(user);
     }
     @Override

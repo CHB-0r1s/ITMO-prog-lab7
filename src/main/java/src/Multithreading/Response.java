@@ -2,6 +2,7 @@ package src.Multithreading;
 
 import java.io.*;
 import java.net.Socket;
+import java.nio.charset.StandardCharsets;
 
 public class Response implements Runnable, Serializable {
     transient Socket socket;
@@ -9,7 +10,7 @@ public class Response implements Runnable, Serializable {
 
     public String getMessage()
     {
-        return message;
+        return new String(message.getBytes(StandardCharsets.UTF_8), StandardCharsets.UTF_8);
     }
 
     public void setMessage(String message)

@@ -74,9 +74,7 @@ public class Invoker implements Serializable
         invokerHashMap.put("exit", new Exit(commandReceiver, clientReceiver));
         invokerHashMap.put("remove_greater", new RemoveGreater(commandReceiver, clientReceiver));
         invokerHashMap.put("remove_lower", new RemoveLower(commandReceiver, clientReceiver));
-        // invokerHashMap.put("save", new Save(commandReceiver));
         invokerHashMap.put("execute_script", new ExecuteScript(commandReceiver));
-        invokerHashMap.put("history", new History(commandReceiver, clientReceiver));
         invokerHashMap.put("remove_all_by_health", new RemoveAllByHealth(commandReceiver, clientReceiver));
         invokerHashMap.put("max_by_melee_weapon", new MaxByMeleeWeapon(commandReceiver, clientReceiver));
         invokerHashMap.put("print_unique_chapter", new PrintUniqueChapter(commandReceiver, clientReceiver));
