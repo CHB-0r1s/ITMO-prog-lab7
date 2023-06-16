@@ -11,6 +11,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
+import java.sql.SQLException;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 public class GUI_AppOperations
 {
@@ -21,11 +24,6 @@ public class GUI_AppOperations
     {
         return mainFrame;
     }
-
-    private static User user = ClientGUI.getUser();
-    private static ClientStreams clientStreams = ClientGUI.getClientStreams();
-
-
     public static void App()
     {
         try
@@ -45,10 +43,35 @@ public class GUI_AppOperations
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(size);
 
-        Container container = frame.getContentPane();
-        container.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-        JButton bHelp = createCommandButton(new Help());
+        Container container = frame.getContentPane();
+        FlowLayout flowLayout = new FlowLayout(FlowLayout.CENTER);
+        container.setLayout(flowLayout);
+        container.setBackground(new Color(43, 35, 35));
+
+
+        Image beautiful;
+        try
+        {
+            beautiful = ImageIO.read(new File("pics\\bottom_pic.png"));
+        } catch (IOException e)
+        {
+            throw new RuntimeException(e);
+        }
+        Image scaledBeauPic = beautiful.getScaledInstance(size.width, size.height / 30, Image.SCALE_REPLICATE);
+        JLabel pic_label = new JLabel(new ImageIcon(scaledBeauPic));
+
+
+        JScrollPane objects = createScrolledText(new Dimension(size.width, size.height/(2)), new Show());
+        container.add(objects);
+        container.add(pic_label);
+        JScrollPane others = createScrolledText(new Dimension(size.width, size.height/(4)), nullCmd);
+        container.add(others);
+
+
+
+
+        //__________________commands___________________
 
         //commands with obj
         Add add = new Add();
@@ -94,6 +117,11 @@ public class GUI_AppOperations
         JButton bShow = createCommandButton(new Show());
         JButton bMaxByMeleeWeapon = createCommandButton(new MaxByMeleeWeapon());
         JButton bPrintUniqueChapter = createCommandButton(new PrintUniqueChapter());
+        JButton bHelp = createCommandButton(new Help());
+
+        //not a command
+        JButton bLang = createButton("Languages");
+        bLang.addActionListener(new LangListener());
 
         container.add(bHelp);
         container.add(bAdd);
@@ -109,11 +137,87 @@ public class GUI_AppOperations
         container.add(bShow);
         container.add(bUpdate);
         container.setPreferredSize(size);
-        //frame.pack();
+        container.add(bLang);
+
+        //__________________commands___________________closed
+
         frame.setVisible(true);
+    }
+    private static final Command nullCmd = new Command()
+    {
+        @Override
+        public void execute(User user) throws IOException, SQLException, ClassNotFoundException
+        {
+
+        }
+
+        @Override
+        public Command clientExecute() throws IOException
+        {
+            return null;
+        }
+
+        @Override
+        protected String writeInfo()
+        {
+            return null;
+        }
+    };
+
+    private static HashMap<Class,JLabel> repainters = new HashMap<>();
+
+    public static void thingsForRepaint(Command command)
+    {
+        boolean check = true;
+        for(Class cl:repainters.keySet())
+        {
+            if(command.getClass().equals(cl))
+            {
+                repainters.get(command.getClass()).setText(ResponseToGUI.getHtml());
+                repainters.get(command.getClass()).repaint();
+                check = false;
+            }
+        }
+        if(check)
+        {
+            for(Class cl:repainters.keySet())
+            {
+                if(cl.equals(nullCmd.getClass()))
+                {
+                    repainters.get(nullCmd.getClass()).setText(ResponseToGUI.getHtml());
+                    repainters.get(nullCmd.getClass()).repaint();
+                    check = false;
+                }
+            }
+        }
+    }
+
+    private static JScrollPane createScrolledText(Dimension dimension, Command command)
+    {
+        JLabel label = new JLabel(ResponseToGUI.getHtml(), SwingConstants.CENTER);
+        label.setForeground(Color.LIGHT_GRAY);
+        label.setFont(new Font("Times New Roman", Font.BOLD, 14));
+        repainters.put(command.getClass(), label);
+        JScrollPane scrollPane = new JScrollPane(label);
+        scrollPane.setBorder(BorderFactory.createEmptyBorder());
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setPreferredSize(dimension);
+        return scrollPane;
     }
 
     private static JButton createCommandButton (Command command)
+    {
+        JButton button = createButton(command.getClass().getSimpleName());
+
+        CommandButtonListener commandListener = new CommandButtonListener(button, command);
+
+        button.addActionListener(commandListener);
+
+        return button;
+    }
+
+    private static JButton createButton(String line)
     {
         Dimension size = Toolkit.getDefaultToolkit().getScreenSize();
         Image buttonImg;
@@ -132,16 +236,11 @@ public class GUI_AppOperations
         Image scaledPressedButtonImg = pressedButtonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
         Image scaledDisabledButtonImg = disabledButtonImg.getScaledInstance(size.width / 5, size.height / 10, Image.SCALE_REPLICATE);
 
-        JButton button = new ImageTextButton(command.getClass().getSimpleName(), scaledButtonImage, scaledPressedButtonImg, scaledDisabledButtonImg);;
+        JButton button = new ImageTextButton(line, scaledButtonImage, scaledPressedButtonImg, scaledDisabledButtonImg);;
         //button.setBounds(size.width / 2 - size.width / 10, 2 * size.height / 3, size.width / 5, size.height / 10);
-        button.setPreferredSize(new Dimension(size.width / 5, size.height / 10));
-        button.setFont(new Font("Times New Roman", Font.BOLD, 25));
+        button.setPreferredSize(new Dimension(size.width / 10, size.height / 20));
+        button.setFont(new Font("Times New Roman", Font.BOLD, 15));
         button.setForeground(Color.lightGray);
-
-        CommandButtonListener commandListener = new CommandButtonListener(button, command);
-
-        button.addActionListener(commandListener);
-
 
         return button;
     }
