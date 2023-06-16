@@ -30,6 +30,7 @@ public class User implements Serializable
         {
             throw new RuntimeException(e);
         }
+        this.language = "Eng";
     }
 
     void setLogin(String login)
