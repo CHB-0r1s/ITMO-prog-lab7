@@ -16,7 +16,7 @@ public class Show extends Command {
 
     @Override
     public void execute(User user) {
-        commandReceiver.show();
+        commandReceiver.show(user);
     }
 
     @Override

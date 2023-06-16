@@ -47,12 +47,12 @@ public class Receiver implements Serializable{
     }
 
     //xml and l10n
-    public void show() {
+    public void show(User user) {
         TreeSet<SpaceMarine> myCollection = ManagerOfCollection.getMyCollection();
         StringJoiner joiner = new StringJoiner("");
 
         for (SpaceMarine spaceMarine: myCollection) {
-            joiner.add(OutputToXml.marineOutput(spaceMarine));
+            joiner.add(OutputToXml.marineOutput(spaceMarine, user.getLanguage()));
         }
         String stringOutput = joiner.toString();
 
@@ -129,7 +129,7 @@ public class Receiver implements Serializable{
             if (ManagerOfCollection.elemExist(ID)) {
                 if (Objects.equals(ManagerOfCollection.getElemByID(id).getCreatedBy(), user.getLogin())) {
                     ManagerOfCollection.remove_by_id(ID);
-                    System.err.println("А я из ранинга вышел");
+
                     propKey += "Success";
                     String stringOutput = properties.getProperty(propKey) + " " + ID;
 
@@ -257,7 +257,7 @@ public class Receiver implements Serializable{
     public void max_by_melee_weapon(User user) {
         SpaceMarine spaceMarine = ManagerOfCollection.max_by_melee_weapon();
         if (spaceMarine != null) {
-            System.out.println(OutputToXml.marineOutput(spaceMarine));
+            System.out.println(OutputToXml.marineOutput(spaceMarine, user.getLanguage()));
         }
         else {
             String propKey = user.getLanguage() + ".Command.MaxByMeleeWeapon.execute.Error";
