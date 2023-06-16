@@ -1,5 +1,13 @@
 package src.GUI;
 
+import javafx.beans.binding.Bindings;
+import javafx.beans.property.DoubleProperty;
+import javafx.embed.swing.JFXPanel;
+import javafx.scene.Group;
+import javafx.scene.Parent;
+import javafx.scene.Scene;
+import javafx.scene.layout.Background;
+import javafx.scene.media.*;
 import src.ClientServer.ClientFunc;
 import src.User.User;
 
@@ -14,7 +22,40 @@ public class GUI_LauncherOperations
     public static void startWindow(JFrame frame, Dimension size)
     {
 
+        JFXPanel fxPanel = new JFXPanel();
+        fxPanel.setPreferredSize(size);
+        frame.getContentPane().add(fxPanel);
 
+        SwingUtilities.invokeLater(() -> {
+            Media media = new Media(new File("pics\\start_video.mp4").toURI().toString());
+            MediaPlayer mediaPlayer = new MediaPlayer(media);
+
+            MediaView mediaView = new MediaView(mediaPlayer);
+
+            DoubleProperty mvw = mediaView.fitWidthProperty();
+            DoubleProperty mvh = mediaView.fitHeightProperty();
+            mvw.bind(Bindings.selectDouble(mediaView.sceneProperty(), "width"));
+            mvh.bind(Bindings.selectDouble(mediaView.sceneProperty(), "height"));
+            mediaView.setPreserveRatio(true);
+
+            Parent root = new Group(mediaView);
+            Scene scene = new Scene(root, size.width, size.height);
+
+            fxPanel.setScene(scene);
+
+            mediaPlayer.setOnEndOfMedia(() ->
+            {
+                mediaView.setVisible(false);
+                connectWindow(frame, size);
+            });
+            mediaPlayer.play();
+        });
+    }
+
+    private static void connectWindow(JFrame frame, Dimension size)
+    {
+        frame.getContentPane().removeAll();
+        frame.repaint();
         JLabel label = new JLabel();
         label = GUI_Image.setBGImage(label, "pics\\start-bg.jpg", size);
 
@@ -30,7 +71,9 @@ public class GUI_LauncherOperations
 
 
         frame.getContentPane().add(button);
-        frame.getContentPane().add(label);
+        frame.add(label);
+        frame.pack();
+        frame.repaint();
     }
 
     public static void registration()
